@@ -6,7 +6,7 @@ from .models import Log, Project
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
-        fields = ['name', 'progress', 'describe']
+        fields = ['name',  'describe']
 
 
 class AddProjectForm(ModelForm):
