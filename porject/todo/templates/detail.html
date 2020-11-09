@@ -1,0 +1,136 @@
+{% extends 'layout.html' %} <br />
+{% block title %} 项目日志-{{project.name}} {% endblock title %} <br />
+{% block content %}
+<div class="container-fluid">
+  <h1>{{project.name}}</h1>
+
+  <div class="row">
+    <div class="col-sm-6">
+      <table class="table text-left">
+        <thead style="opacity: 0">
+          <tr>
+            <th width="150"></th>
+            <th width="500"></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>项目介绍：</td>
+            <td>{{project.describe}}</td>
+          </tr>
+          <tr>
+            <td>项目开始时间：</td>
+            <td>{{project.getStartTime}}</td>
+          </tr>
+          <tr>
+            <td>预计结束时间：</td>
+            <td>{{project.getExpectedEnd}}</td>
+          </tr>
+          <tr>
+            <td>项目交付时间:</td>
+            <td>{{project.getActualDeliveryDate}}</td>
+          </tr>
+          <tr>
+            <td>项目进度：</td>
+            <td>
+              <div class="progress">
+                <div
+                  class="progress-bar"
+                  role="progressbar"
+                  style="width: {{project.progress}}%"
+                  aria-valuenow="{{project.progress}}"
+                  aria-valuemin="0"
+                  aria-valuemax="100"
+                ></div>
+              </div>
+              <code>当前项目进度：{{project.progress}}%</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-sm-6">
+      <div class="col">
+        <div style="padding: 10px 0">
+          <a href="?type=day">本日</a>
+          <span>/</span>
+          <a href="?type=week">本周</a>
+          <span>/</span>
+          <a href="?type=month">本月</a>
+          <span>/</span>
+          <a href="?type=">all</a>
+        </div>
+        <div>
+          <textarea name="" id="clip" style="padding: 10px" cols="60" rows="10">
+项目名： {{project.name}}
+项目开始时间：{{project.getStartTime}}
+项目排单结束时间：{{project.getExpectedEnd}}
+项目交付时间：{{project.getActualDeliveryDate}}
+当前项目进度：{{project.progress}}%
+工作内容：{{jobs}}
+下周工作计划：-
+项目是否遇到问题：否
+      </textarea
+          >
+        </div>
+
+        <!-- Trigger -->
+        <button class="btn btn-light" data-clipboard-target="#clip">
+          Cut to clipboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 10px 0">
+    <a href="{% url 'addLog' project.id %}">
+      <button type="button" class="btn btn-primary">添加日志</button>
+    </a>
+    <button type="disabled" class="btn btn-disabled">项目延期:Todo</button>
+  </div>
+
+  <table class="table text-left table-bordered">
+    <thead class="thead-dark">
+      <tr>
+        {% comment %}
+        <th width="100">ID</th>
+        {% endcomment %}
+        <th width="200">添加日期</th>
+        <th width="120">增加进度</th>
+        <th width="600">工作内容</th>
+        <th width="200">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for l in logs %}
+      <tr>
+        {% comment %}
+        <td>{{l.id}}</td>
+        {% endcomment %}
+        <td>{{l.getCreatedAt}}</td>
+        <td>
+          <div class="progress">
+            <div
+              class="progress-bar"
+              role="progressbar"
+              style="width: {{l.plusProgress}}%"
+              aria-valuenow="{{l.plusProgress}}"
+              aria-valuemin="0"
+              aria-valuemax="100"
+            ></div>
+          </div>
+          <code>增加：{{l.plusProgress}}%</code>
+        </td>
+        <td>{{l.content}}</td>
+        <td>
+          {% if l.isAddToday %}
+          <a href="{% url 'editLog' project.id l.id %}">编辑</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}

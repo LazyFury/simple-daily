@@ -1,0 +1,60 @@
+{% extends 'layout.html' %} <br />
+{% block title %}添加 {% endblock %} {% block content %}
+<h1>添加项目</h1>
+<form action="{% url 'add' %}" method="post" style="width: 800px">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="projectName">项目名称</label>
+    <input
+      name="name"
+      class="form-control"
+      id="projectName"
+      type="text"
+      value=""
+    />
+  </div>
+  <div class="form-group">
+    <label for="projectDesc">项目描述</label>
+    <textarea name="describe" class="form-control" id="projectDesc"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="projectProgress">项目进度</label>
+    <input
+      name="progress"
+      type="range"
+      class="form-control-range"
+      id="projectProgress"
+      value="0"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="projectStart">开始时间</label>
+    <input name="start" class="form-control" id="projectStart" type="date" />
+  </div>
+
+  <div class="form-group">
+    <label for="projectExpectedEnd">预计结束时间</label>
+    <input
+      name="expectedEnd"
+      class="form-control"
+      id="projectExpectedEnd"
+      type="date"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="projectActualDeliveryDate">实际交付日期</label>
+    <input
+      name="actualDeliveryDate"
+      class="form-control"
+      id="projectActualDeliveryDate"
+      type="date"
+    />
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}

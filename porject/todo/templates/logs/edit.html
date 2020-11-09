@@ -1,0 +1,59 @@
+{% extends 'layout.html' %} <br />
+{% block title %} 添加日志 {% endblock title %} <br />
+{% block content %}
+<div>
+  <h1>添加日志-{{project.name}}</h1>
+  <hr />
+  <form
+    action="{% url 'editLog' project.id log.id %}"
+    method="post"
+    style="width: 800px"
+  >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="projectCreatedAt">提交日期</label>
+      <input
+        name="createdAt"
+        class="form-control"
+        id="projectCreatedAt"
+        type="datetime-local"
+        value="{{log.getEditCreatedAt}}"
+        disabled
+      />
+    </div>
+    <div class="form-group">
+      <label for="projectContent">工作内容</label>
+      <textarea name="content" class="form-control" id="projectContent">
+{{log.content}}</textarea
+      >
+    </div>
+
+    <div class="form-group">
+      <label for="projectProgress">项目进度</label>
+      <input
+        name="plusProgress"
+        type="range"
+        class="form-control-range"
+        id="projectProgress"
+        value="{{log.plusProgress}}"
+        onchange="progressChange(this)"
+      />
+      <code
+        >增加进度：
+        <span id="plusProgress">{{project.plusProgress}}</span>%</code
+      >
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <script>
+    (document.ready = function () {
+      var input = document.querySelector("#projectProgress");
+      progressChange(input);
+    })();
+    function progressChange(e) {
+      $("#plusProgress").html(e.value);
+    }
+  </script>
+</div>
+{% endblock content %}

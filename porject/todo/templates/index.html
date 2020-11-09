@@ -1,0 +1,98 @@
+{% extends "layout.html" %} <br />
+{% block title %}home {% endblock title%} {% block content %}
+<div class="container-fluid">
+  <header><h1>项目管理</h1></header>
+
+  <div style="padding: 10px 0">
+    <a href="{% url 'add' %}">
+      <button type="button" class="btn btn-primary">添加项目</button>
+    </a>
+  </div>
+  <main>
+    <table class="table text-left table-bordered">
+      <thead class="thead-dark">
+        <tr>
+          <th>项目id</th>
+          <th>项目名称</th>
+          <th>项目介绍</th>
+          <th>项目进度</th>
+          <th>开始时间</th>
+          <th>预计结束时间</th>
+          <th>项目交付时间</th>
+          {% comment %}
+          <th>创建时间</th>
+          {% endcomment %}
+          <th>更新时间</th>
+          <th>工作日志</th>
+          <th>操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in projects %}
+        <tr>
+          <td>{{p.id}}</td>
+          <td scope="row">
+            <strong>{{p.name}}</strong>
+          </td>
+          <td>{{p.describe}}</td>
+          <td>
+            <div class="progress">
+              <div
+                class="progress-bar"
+                role="progressbar"
+                style="width: {{p.progress}}%"
+                aria-valuenow="{{p.progress}}"
+                aria-valuemin="0"
+                aria-valuemax="100"
+              ></div>
+            </div>
+            <code>已进行{{p.progress}}%</code>
+          </td>
+          <td>{{p.getStartTime}}</td>
+          <td>{{p.getExpectedEnd}}</td>
+          <td>{{p.getActualDeliveryDate}}</td>
+          {% comment %}
+          <td>{{p.getCreatedAt}}</td>
+          {% endcomment %}
+          <td>{{p.getUpdatedAt}}</td>
+          <td><a href="{% url 'detail' p.id %}">查看日志</a></td>
+          <td>
+            <a href="{% url 'update' p.id%}">编辑</a>
+            <span>/</span>
+            <a
+              href="javascript:con=confirm('确认删除');if(con)location.href='{% url 'delete' p.id%}'"
+              >删除</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <span>分页大小：{{size}}，共{{projects.paginator.count}}条数据</span>
+    <div class="pagination">
+      <span class="step-links">
+        {% if projects.has_previous %}
+        <a href="?page=1&size={{size}}">&laquo; 首页</a>
+        <a href="?page={{ projects.previous_page_number }}&size={{size}}"
+          >上一页</a
+        >
+        {% endif %}
+
+        <span class="current">
+          第 {{ projects.number }}页，共 {{ projects.paginator.num_pages }}页
+        </span>
+
+        {% if projects.has_next %}
+        <a href="?page={{ projects.next_page_number }}&size={{size}}">下一页</a>
+        <a href="?page={{ projects.paginator.num_pages }}&size={{size}}"
+          >末页 &raquo;</a
+        >
+        {% endif %}
+      </span>
+    </div>
+  </main>
+  <script></script>
+</div>
+
+{% endblock content%}

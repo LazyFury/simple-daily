@@ -1,0 +1,13 @@
+{
+  "python.pythonPath": "/Users/suke/.local/share/virtualenvs/django-demo-wUkLgMqz/bin/python",
+  "editor.codeActionsOnSave": {},
+  "html.format.enable": false,
+  "[django-html]": {
+    "breadcrumbs.showFields": false,
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    }
+  }
+}
