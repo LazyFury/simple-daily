@@ -69,8 +69,9 @@
 项目交付时间：{{project.getActualDeliveryDate}}
 当前项目进度：{{project.progress}}%
 工作内容：{{jobs}}
+{% if isWeek %}
 下周工作计划：-
-项目是否遇到问题：否
+项目是否遇到问题：否{% endif %}
       </textarea
           >
         </div>

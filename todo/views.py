@@ -85,7 +85,7 @@ def detail(request: HttpRequest, project_id):
     type = request.GET.get("type")
     if(type != ""):
         delta = {
-            "day": datetime.timedelta(days=1),
+            "day": datetime.timedelta(hours=18),
             "week": datetime.timedelta(days=7),
             "month": datetime.timedelta(days=30)
         }.get(type, None)
@@ -98,7 +98,8 @@ def detail(request: HttpRequest, project_id):
     context = {
         "project": p,
         "logs": logs,
-        "jobs": ",".join(l.content for l in logs)
+        "jobs": ",".join(l.content for l in logs),
+        "isWeek": type == 'week'
     }
     return render(request, "detail.html", context)
 
