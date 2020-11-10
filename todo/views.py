@@ -9,6 +9,10 @@ from django.shortcuts import get_list_or_404, get_object_or_404, redirect, rende
 # Create your views here.
 
 
+def hello(request):
+    return HttpResponse("hello world! django wsgi easy restart")
+
+
 def index(request: HttpRequest):
     if request.method == "GET":
         page = int(request.GET.get("page", default=1))

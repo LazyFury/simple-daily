@@ -11,4 +11,6 @@ urlpatterns = [
     path("detail/<int:project_id>/logs/add", views.addLog, name='addLog'),
     path("detail/<int:project_id>/logs/<int:log_id>/edit",
          views.EditLog, name="editLog"),
+
+    path("hello", views.hello, name='hello')
 ]
