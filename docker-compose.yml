@@ -1,0 +1,12 @@
+version: "3"
+services:
+  dev:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 5321:8000
+    volumes:
+      - ./:/root/app
+    command: /bin/bash -c 'cd /root/app;uwsgi --http :8000 --wsgi-file ./porject/wsgi.py'
