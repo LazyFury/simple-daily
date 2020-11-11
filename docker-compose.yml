@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - 5321:8000
+      - 5321:9871
     volumes:
       - ./:/root/app
-    command: /bin/bash -c 'cd /root/app;uwsgi --http :8000 --wsgi-file ./porject/wsgi.py'
+    command: /bin/bash -c 'cd /root/app;uwsgi uwsgi.ini'

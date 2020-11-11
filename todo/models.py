@@ -50,7 +50,7 @@ class Log(models.Model):
 
     def isAddToday(self):
         now = timezone.now()
-        delta = datetime.timedelta(hours=20)
+        delta = datetime.timedelta(hours=datetime.datetime.now().hour)
         return now - self.createdAt <= delta
 
     def __str__(self):
