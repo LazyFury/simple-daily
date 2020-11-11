@@ -1,3 +1,4 @@
+from datetime import date
 from django.core.paginator import Paginator
 from .form import AddProjectForm, ProjectForm, ProjectLogForm
 from django.utils import timezone
@@ -85,9 +86,9 @@ def detail(request: HttpRequest, project_id):
     type = request.GET.get("type")
     if(type != ""):
         delta = {
-            "day": datetime.timedelta(hours=18),
-            "week": datetime.timedelta(days=7),
-            "month": datetime.timedelta(days=30)
+            "day": datetime.timedelta(hours=now.hour),
+            "week": datetime.timedelta(days=now.weekday()),
+            "month": datetime.timedelta(days=now.day)
         }.get(type, None)
 
         print(delta)
