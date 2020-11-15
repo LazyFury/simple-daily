@@ -1,4 +1,5 @@
 from datetime import date
+from user.utils import needUser
 from django.core.paginator import Paginator
 from .form import AddProjectForm, ProjectForm, ProjectLogForm
 from django.utils import timezone
@@ -6,6 +7,7 @@ from django.http.request import HttpRequest
 from django.http.response import Http404, HttpResponse
 from .models import Log, Project
 import datetime
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404, get_object_or_404, redirect, render
 # Create your views here.
 
@@ -14,7 +16,10 @@ def hello(request):
     return HttpResponse("hello world! django wsgi easy restart")
 
 
+@needUser
+@login_required
 def index(request: HttpRequest):
+    print(request.uid)
     if request.method == "GET":
         page = int(request.GET.get("page", default=1))
         pageSize = int(request.GET.get("size", default=10))
@@ -87,6 +92,7 @@ def detail(request: HttpRequest, project_id):
     if(type != ""):
         delta = {
             "day": datetime.timedelta(hours=now.hour),
+            "yesterday": datetime.timedelta(hours=now.hour+24),
             "week": datetime.timedelta(days=now.weekday()),
             "month": datetime.timedelta(days=now.day)
         }.get(type, None)
@@ -96,11 +102,15 @@ def detail(request: HttpRequest, project_id):
             start = now - delta
     logs = Log.objects.filter(project=Project(
         id=project_id), createdAt__gte=start).order_by("-createdAt")
+    plus_progress = 0
+    for l in logs.all():
+        plus_progress += l.plusProgress
     context = {
         "project": p,
         "logs": logs,
         "jobs": ",".join(l.content for l in logs),
-        "isWeek": type == 'week'
+        "isWeek": type == 'week',
+        "plus_progress": plus_progress
     }
     return render(request, "detail.html", context)
 

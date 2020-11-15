@@ -55,6 +55,8 @@
         <div style="padding: 10px 0">
           <a href="?type=day">本日</a>
           <span>/</span>
+          <a href="?type=yesterday">昨天</a>
+          <span>/</span>
           <a href="?type=week">本周</a>
           <span>/</span>
           <a href="?type=month">本月</a>
@@ -68,6 +70,7 @@
 项目排单结束时间：{{project.getExpectedEnd}}
 项目交付时间：{{project.getActualDeliveryDate}}
 当前项目进度：{{project.progress}}%
+{% if isWeek %}本周{% endif %}进度：{{plus_progress}}%
 工作内容：{{jobs}}
 {% if isWeek %}
 下周工作计划：-

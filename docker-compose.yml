@@ -9,4 +9,4 @@ services:
       - 5321:9871
     volumes:
       - ./:/root/app
-    command: /bin/bash -c 'cd /root/app;uwsgi uwsgi.ini'
+    command: /bin/bash -c 'cd /root/app;python manage.py colletcstatic;uwsgi uwsgi.ini'

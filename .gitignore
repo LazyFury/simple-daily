@@ -1,3 +1,4 @@
 db.sqlite3
 *.pyc
 todo/__pycache__/views.cpython-38.pyc
+**/static/admin
