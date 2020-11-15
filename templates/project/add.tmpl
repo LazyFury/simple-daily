@@ -1,0 +1,135 @@
+{{template "base_header" site "添加项目"}}
+
+<main style="padding: 30px;">
+    <div class="container-fluid">
+        <h1>添加项目</h1>
+        <hr>
+        <form class="layui-form" style="margin-top: 20px;width:600px" action="/project/update/{{.project.ID}}"
+            method="post">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required lay-verify="required" placeholder="请输入标题" autocomplete="off"
+                        class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目介绍</label>
+                <div class="layui-input-block">
+                    <textarea type="text" name="describe" required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">开始时间</label>
+                <div class="layui-input-block">
+                    <input type="date" name="start" required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-input" id='start'>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">预计交付时间</label>
+                <div class="layui-input-block">
+                    <input type="date" name="expect_end" required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-input" id='expect_end'>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">交付时间</label>
+                <div class="layui-input-block">
+                    <input type="date" name="actual_delivery_date" required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-input" id='actual_delivery_date'>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目进度</label>
+                <div class="layui-input-block">
+                    <input name="progress" type="number" value="0" hidden id='progress'>
+                    <div style="margin-bottom:10px" id="slideTest1"></div>
+                    <code id="show-progress">0%</code>
+                </div>
+            </div>
+
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="add">立即提交</button>
+                </div>
+            </div>
+        </form>
+
+
+        <script>
+            $(document).ready(function () {
+                layui.use('laydate', function () {
+                    var laydate = layui.laydate;
+
+                    //执行一个laydate实例
+                    laydate.render({
+                        elem: '#start', //指定元素
+                        trigger: "click",
+
+                    });
+                    laydate.render({
+                        elem: '#expect_end', //指定元素
+                        trigger: "click",
+                    });
+                    laydate.render({
+                        elem: '#actual_delivery_date', //指定元素
+                        trigger: "click",
+                    });
+                });
+
+
+                layui.use('slider', function () {
+                    var slider = layui.slider;
+
+                    //渲染
+                    slider.render({
+                        elem: '#slideTest1',  //绑定元素
+                        min: 0,
+                        max: 100,
+                        step: 1,
+                        change: function (val) {
+                            $("#progress").val(val)
+                            $("#show-progress").text(val + "%")
+                        }
+                    });
+                });
+
+                layui.use('form', function () {
+                    var form = layui.form;
+
+                    //各种基于事件的操作，下面会有进一步介绍
+                    form.on("submit(add)", function (e) {
+                        console.log(e)
+                        let field = e.field || {}
+                        field.start = dayjs(field.start).format("YYYY年MM月DD日 hh:mm:ss")
+                        field.expect_end = dayjs(field.expect_end).format("YYYY年MM月DD日 hh:mm:ss")
+                        field.actual_delivery_date = dayjs(field.actual_delivery_date).format("YYYY年MM月DD日 hh:mm:ss")
+                        field.progress = field.progress * 1
+                        fetch("/project/add", {
+                            method: "post", body: JSON.stringify(field), headers: {
+                                "content-type": "application/json"
+                            }
+                        }).then(res => {
+                            // window.parent.location.reload()
+                            console.log(parent.location.reload())
+                            return res.json()
+                        })
+                        return false
+                    })
+                });
+            })
+        </script>
+    </div>
+</main>
+
+{{template "base_footer"}}

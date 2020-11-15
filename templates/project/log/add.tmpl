@@ -1,0 +1,92 @@
+{{template "base_header" site "添加项目"}}
+
+<main style="padding: 30px;">
+    <div class="container-fluid">
+        <h1>添加日志</h1>
+        <hr>
+        <form action="" class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">创建时间</label>
+                <div class="layui-input-block">
+                    <input type="datetime-local" disabled required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-input" value='{{time now "2006-01-02T15:04"}}'>
+                </div>
+            </div>
+
+            <input type="text" name="project_id" hidden value="{{.projectID}}" id="">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目介绍</label>
+                <div class="layui-input-block">
+                    <textarea type="text" name="content" required lay-verify="required" placeholder="请输入标题"
+                        autocomplete="off" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目进度</label>
+                <div class="layui-input-block">
+                    <input name="plus_progress" type="number" value="1" hidden id='progress'>
+                    <div style="margin-bottom:10px" id="slideTest1"></div>
+                    <code id="show-progress">1%</code>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="addlogs">立即提交</button>
+                </div>
+            </div>
+        </form>
+
+
+        <script>
+            $(document).ready(function () {
+                layui.use('slider', function () {
+                    var slider = layui.slider;
+
+                    //渲染
+                    var progress = slider.render({
+                        elem: '#slideTest1',  //绑定元素
+                        min: 0,
+                        max: 100,
+                        step: 1,
+                        change: function (val) {
+                            $("#progress").val(val)
+                            $("#show-progress").text(val + "%")
+                        }
+                    });
+                    progress.setValue(1)
+                });
+
+                layui.use('form', function () {
+                    var form = layui.form;
+
+                    //各种基于事件的操作，下面会有进一步介绍
+                    form.on("submit(addlogs)", function (e) {
+                        console.log(e)
+                        let field = e.field || {}
+                        console.log(field)
+                        field.project_id = field.project_id * 1
+                        field.plus_progress = field.plus_progress * 1
+                        fetch("", {
+                            method: "post", body: JSON.stringify(field), headers: {
+                                "content-type": "application/json"
+                            }
+                        }).then(res => {
+                            // window.parent.location.reload()
+                            console.log(parent.location.reload())
+                            return res.json()
+                        })
+                        return false
+                    })
+                });
+            })
+        </script>
+    </div>
+</main>
+
+{{template "base_footer"}}

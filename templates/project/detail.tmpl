@@ -1,0 +1,138 @@
+{{template "header" site .project.Name}}
+
+<main>
+    <div class="container-fluid">
+        <h1>{{.project.Name}}</h1>
+        <hr>
+        <div class="layui-row">
+            <div class="layui-col-md5">
+                <table class="table text-left">
+                    <thead style="opacity: 0">
+                        <tr>
+                            <th width="150"></th>
+                            <th width="500"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><b>项目介绍：</b></td>
+                            <td>{{.project.Describe}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>项目开始时间：</b></td>
+                            <td>{{.project.Start.ToDate}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>预计结束时间：</b></td>
+                            <td>{{.project.ExpectEnd.ToDate}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>项目交付时间:</b></td>
+                            <td>{{.project.ActualDeliveryDate.ToDate}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>项目进度：</b></td>
+                            <td>
+                                <div class="layui-progress  layui-progress-big" style="margin:10px 10px 4px 0">
+                                    <div class="layui-progress-bar layui-bg-green" lay-percent="{{.project.Progress}}%">
+                                    </div>
+                                </div>
+                                <code>当前项目进度：{{.project.Progress}}%</code>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="layui-col-md6">
+                <div class="col">
+                    <div style="padding: 10px 0">
+                        <i class="layui-icon layui-icon-date" style="margin-top:4px"></i>
+                        <a href="?start={{today}}&type=day">本日</a>
+                        <span>/</span>
+                        <a href="?start={{yesterday}}&end={{today}}">昨天</a>
+                        <span>/</span>
+                        <a href="?start={{thisWeek}}&type=week">本周</a>
+                        <span>/</span>
+                        <a href="?start={{lastWeek}}&end={{thisWeek}}&type=week">上周</a>
+                        <span>/</span>
+                        <a href="?start={{thisMonth}}&type=month">本月</a>
+                        <span>/</span>
+                        <a href="?start={{lastMonth}}&end={{thisMonth}}&type=month">上月</a>
+                        <span>/</span>
+                        <a href="?type=">all</a>
+                    </div>
+                    <div>
+                        <textarea name="" id="clip" style="padding: 10px" cols="60" rows="10">
+项目名： {{.project.Name}}
+项目开始时间：{{.project.Start.ToDate}}
+项目排单结束时间：{{.project.ExpectEnd.ToDate}}
+项目交付时间：{{.project.ActualDeliveryDate.ToDate}}
+当前项目进度：{{.project.Progress}}%
+{{if .isToday}}本日{{end}}{{if .isWeek}}本周{{end}}{{if .isMonth}}本月{{end}}进度：{{.plus_progress}}%
+工作内容：{{.jobs}}
+{{if .isWeek}}
+下周工作计划：-
+项目是否遇到问题：否{{end}}
+            </textarea>
+                    </div>
+
+                    <!-- Trigger -->
+                    <button class="btn layui-btn" data-clipboard-target="#clip">
+                        <i class="mdui-icon mdui-icon-left material-icons">&#xe14d;</i>Cut to clipboard
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div style="padding: 10px 0">
+            <a href="javascript:open('/project/detail/{{.project.ID}}/logs/add');">
+                <button type="button" class="layui-btn">
+                    <i class="layui-icon layui-icon-edit"></i>添加日志</button>
+            </a>
+            <button type="disabled" class="layui-btn layui-btn-primary">项目延期:Todo</button>
+            <button type="disabled" class="layui-btn layui-btn-primary">待处理任务</button>
+        </div>
+
+        <table class="layui-table">
+            <thead class="thead-dark">
+                <tr>
+                    <th width="100">ID</th>
+                    <th width="200">添加日期</th>
+                    <th width="120">增加进度</th>
+                    <th width="600">工作内容</th>
+                    <th width="200">操作(只能修改今天的</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range.project.Logs }}
+                <tr>
+                    <td>{{.ID}}</td>
+                    <td>{{timeFormat .CreatedAt}}</td>
+                    <td>
+                        <div class="layui-progress" style="margin:10px 10px 4px 0">
+                            <div class="layui-progress-bar layui-bg-green" lay-percent="{{.PlusProgress}}%">
+                            </div>
+                        </div>
+                        <code>{{.PlusProgress}}%</code>
+                    </td>
+                    <td>{{.Content}}</td>
+                    <td>
+                        {{if .IsToday}}
+                        <a href="javascript:open('/project/detail/{{.ProjectID}}/logs/update/{{.ID}}');">编辑</a>
+                        {{end}}
+                    </td>
+                </tr>
+                {{end}}
+            </tbody>
+        </table>
+
+        <script>
+            function open(url) {
+                layer.open({ type: 2, content: url, area: ['600px', '480px'] })
+            }
+        </script>
+    </div>
+</main>
+
+{{template "footer"}}
