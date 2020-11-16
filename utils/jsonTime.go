@@ -4,6 +4,8 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"time"
+
+	"github.com/labstack/gommon/log"
 )
 
 var (
@@ -44,11 +46,19 @@ func (t *JSONTime) UnmarshalJSON(b []byte) error {
 	var str = string(b)
 	fmt.Printf(str + "\n")
 	tTime, err := time.Parse(`"`+t.localLayout()+`"`, str)
-	if err != nil {
-		fmt.Println(err)
+	if err == nil {
+		t.Time = tTime
+		return nil
 	}
-	t.Time = tTime
-	return nil
+
+	log.Debugf("format default fail")
+
+	tTime, err = time.Parse(`"2006-01-02"`, str)
+	if err == nil {
+		t.Time = tTime
+		return nil
+	}
+	return err
 }
 
 // Value Value
