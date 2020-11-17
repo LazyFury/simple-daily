@@ -1,8 +1,8 @@
 version: "3"
 services:
-  dev:
+  daily:
     build:
-      context: ./
+      context: ./docker
       dockerfile: Dockerfile
     ports:
       - 5312:8080
@@ -12,15 +12,22 @@ services:
       - mysql:mysql
     volumes:
       - ./:/root/app
-      - ./wait-for-it.sh:/root/wait-for-it.sh
+      - ./docker/wait-for-it.sh:/root/wait-for-it.sh
     command: /bin/bash -c  "chmod +x /root/wait-for-it.sh;/root/wait-for-it.sh mysql:3306 -- echo mysql launch success;cd /root/app;air"
   mysql:
-    image: mysql:8
+    build:
+      context: ./docker
+      dockerfile: ./mysql/Dockerfile
+    ports:
+      - 1232:3306
     security_opt:
       - seccomp:unconfined
+    restart: always
+    volumes:
+      - ./docker:/root/mysql
     environment:
-      - MYSQL_ALLOW_EMPTY_PASSWORD=true
-      - mysql_root_password=
+      - MYSQL_ALLOW_EMPTY_PASSWORD=false
+      - MYSQL_ROOT_PASSWORD=sukeaiya
       - LANG=C.UTF-8
       - default_authentication_plugin=mysql_native_password
       - character-set-server=utf8mb4

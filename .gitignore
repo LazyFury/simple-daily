@@ -2,3 +2,4 @@ vendor/
 sqlite.db
 tmp/
 go.sum
+*backup.sql

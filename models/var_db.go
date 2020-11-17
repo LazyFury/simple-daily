@@ -1,7 +1,7 @@
 package models
 
 import (
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -11,7 +11,7 @@ var DB *gorm.DB
 
 // Connect 链接数据库
 func Connect() (err error) {
-	db, err := gorm.Open(sqlite.Open("sqlite.db"), &gorm.Config{
+	db, err := gorm.Open(mysql.Open("root:sukeaiya@tcp(mysql:3306)/daily?charset=utf8mb4&parseTime=True&loc=Local"), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {
