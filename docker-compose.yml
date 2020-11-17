@@ -6,6 +6,22 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5312:8080
+    depends_on:
+      - mysql
+    links:
+      - mysql:mysql
     volumes:
       - ./:/root/app
-    command: /bin/bash -c  "cd /root/app;air"
+      - ./wait-for-it.sh:/root/wait-for-it.sh
+    command: /bin/bash -c  "chmod +x /root/wait-for-it.sh;/root/wait-for-it.sh mysql:3306 -- echo mysql launch success;cd /root/app;air"
+  mysql:
+    image: mysql:8
+    security_opt:
+      - seccomp:unconfined
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+      - mysql_root_password=
+      - LANG=C.UTF-8
+      - default_authentication_plugin=mysql_native_password
+      - character-set-server=utf8mb4
+      - collation-server=utf8mb4_unicode_ci
