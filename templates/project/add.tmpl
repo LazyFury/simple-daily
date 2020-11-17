@@ -111,9 +111,7 @@
                     form.on("submit(add)", function (e) {
                         console.log(e)
                         let field = e.field || {}
-                        field.start = dayjs(field.start).format("YYYY年MM月DD日 hh:mm:ss")
-                        field.expect_end = dayjs(field.expect_end).format("YYYY年MM月DD日 hh:mm:ss")
-                        field.actual_delivery_date = dayjs(field.actual_delivery_date).format("YYYY年MM月DD日 hh:mm:ss")
+
                         field.progress = field.progress * 1
                         fetch("/project/add", {
                             method: "post", body: JSON.stringify(field), headers: {

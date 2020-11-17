@@ -2,7 +2,6 @@ package routes
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -153,14 +152,13 @@ func (p *Project) Update(c *gin.Context) {
 	if id == "" {
 		panic("请输入项目id")
 	}
-	pid, err := strconv.Atoi(id)
-	if err != nil {
-		panic(utils.JSONError("ID需要是数字", err))
-	}
-	db := models.DB
-	project := &models.ProjectModel{Model: models.Model{ID: uint(pid)}}
 
-	if db.First(project).RowsAffected == 0 {
+	db := models.DB
+	project := &models.ProjectModel{}
+
+	if db.Where(map[string]interface{}{
+		"id": id,
+	}).First(project).RowsAffected == 0 {
 		panic("项目不存在")
 	}
 
