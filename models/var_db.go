@@ -10,8 +10,8 @@ import (
 var DB *gorm.DB
 
 // Connect 链接数据库
-func Connect() (err error) {
-	db, err := gorm.Open(mysql.Open(`root:sukeaiya@tcp(mysql:3306)/daily?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai`), &gorm.Config{
+func Connect(dsn string) (err error) {
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	})
 	if err != nil {

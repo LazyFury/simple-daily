@@ -146,6 +146,13 @@ func (p *Project) Add(c *gin.Context) {
 }
 
 // Update 更新项目
+// @Summary List accounts
+// @Description get accounts
+// @Accept  json
+// @Produce  json
+// @Param id path string true "项目ID"
+// @Param body body models.ProjectModel true "更新"
+// @Router /project/update/{id} [put]
 func (p *Project) Update(c *gin.Context) {
 	defer utils.GinRecover(c)
 	id, _ := c.Params.Get("id")

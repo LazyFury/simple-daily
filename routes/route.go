@@ -17,6 +17,7 @@ func Start(g *gin.RouterGroup) {
 	project.GET("/detail/:id", p.Detail)
 	project.GET("/add", p.AddPage)
 	project.POST("/add", p.Add)
+
 	project.GET("/update/:id", p.UpdatePage)
 	project.PUT("/update/:id", p.Update)
 	project.DELETE("/del/:id", p.Delete)

@@ -18,12 +18,141 @@ var doc = `{
     "info": {
         "description": "{{.Description}}",
         "title": "{{.Title}}",
-        "contact": {},
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "name": "API Support",
+            "url": "http://www.swagger.io/support",
+            "email": "support@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/project/update/{id}": {
+            "put": {
+                "description": "get accounts",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "List accounts",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "项目ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "更新",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.ProjectModel"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "gorm.DeletedAt": {
+            "type": "object",
+            "properties": {
+                "time": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if Time is not NULL",
+                    "type": "boolean"
+                }
+            }
+        },
+        "models.ProjectLogModel": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "plus_progress": {
+                    "type": "integer"
+                },
+                "project_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.ProjectModel": {
+            "type": "object",
+            "properties": {
+                "actual_delivery_date": {
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "$ref": "#/definitions/gorm.DeletedAt"
+                },
+                "describe": {
+                    "type": "string"
+                },
+                "expect_end": {
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "logs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ProjectLogModel"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "progress": {
+                    "type": "integer"
+                },
+                "start": {
+                    "$ref": "#/definitions/utils.JSONTime"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "utils.JSONTime": {
+            "type": "object",
+            "properties": {
+                "time.Time": {
+                    "type": "string"
+                }
+            }
+        }
+    }
 }`
 
 type swaggerInfo struct {
@@ -37,12 +166,12 @@ type swaggerInfo struct {
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = swaggerInfo{
-	Version:     "",
+	Version:     "1.0",
 	Host:        "",
-	BasePath:    "",
+	BasePath:    "/",
 	Schemes:     []string{},
-	Title:       "",
-	Description: "",
+	Title:       "simple-daily",
+	Description: "This is a sample server Petstore server.",
 }
 
 type s struct{}
