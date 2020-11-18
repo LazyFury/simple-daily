@@ -22,6 +22,11 @@ func (p *ProjectLogModel) IsToday() bool {
 	return p.CreatedAt.After(today)
 }
 
+// Object 自身
+func (p *ProjectLogModel) Object() interface{} {
+	return &ProjectLogModel{}
+}
+
 // Validator 验证
 func (p *ProjectLogModel) Validator() (err error) {
 

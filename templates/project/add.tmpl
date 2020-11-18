@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <h1>添加项目</h1>
         <hr>
-        <form class="layui-form" style="margin-top: 20px;width:600px" action="/project/update/{{.project.ID}}"
+        <form class="layui-form" style="margin-top: 20px;width:600px" action="/projects/update/{{.project.ID}}"
             method="post">
             <div class="layui-form-item">
                 <label class="layui-form-label">项目名称</label>
@@ -113,7 +113,7 @@
                         let field = e.field || {}
 
                         field.progress = field.progress * 1
-                        fetch("/project/add", {
+                        fetch("/projects/add", {
                             method: "post", body: JSON.stringify(field), headers: {
                                 "content-type": "application/json"
                             }

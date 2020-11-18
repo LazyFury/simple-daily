@@ -10,7 +10,7 @@ func Start(g *gin.RouterGroup) {
 
 	// 项目
 	var p = Project{}
-	var project = g.Group("/project")
+	var project = g.Group("/projects")
 
 	g.GET("/", p.Index)
 	project.GET("/", p.Index)
@@ -24,8 +24,10 @@ func Start(g *gin.RouterGroup) {
 
 	// 项目日志
 	pLogs := &ProjectLog{}
+	logsRoute := g.Group("/project-logs")
 	project.GET("/detail/:id/logs/add", pLogs.AddPage)
 	project.POST("/detail/:id/logs/add", pLogs.Add)
-	project.GET("/detail/:id/logs/update/:lid", pLogs.UpdatePage)
-	project.PUT("/detail/:id/logs/update/:lid", pLogs.Update)
+	logsRoute.GET("/update/:lid", pLogs.UpdatePage)
+	logsRoute.PUT("/update/:lid", pLogs.Update)
+	logsRoute.GET("/detail/:id", pLogs.Detail)
 }

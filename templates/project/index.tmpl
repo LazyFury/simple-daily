@@ -5,7 +5,7 @@
     <hr>
     <div style="margin-bottom: 16px;">
 
-      <a href="javascript:open('/project/add');" class="layui-btn">
+      <a href="javascript:open('/projects/add');" class="layui-btn">
         <i class="layui-icon-addition layui-icon"></i>添加项目
       </a>
     </div>
@@ -43,8 +43,8 @@
           <td>{{tFormatDate .ActualDeliveryDate}}</td>
           <!-- <td>{{.CreatedAt}}</td> -->
           <!-- <td>{{timeFormat .UpdatedAt}}</td> -->
-          <td><a href="/project/detail/{{.ID}}">查看日志</a></td>
-          <td><a href="javascript:open('/project/update/{{.ID}}');">编辑</a> / <a href="javascript:del({{.ID}});">删除</a>
+          <td><a href="/projects/detail/{{.ID}}">查看日志</a></td>
+          <td><a href="javascript:open('/projects/update/{{.ID}}');">编辑</a> / <a href="javascript:del({{.ID}});">删除</a>
           </td>
         </tr>
         {{ end}}
@@ -58,7 +58,7 @@
         layer.confirm("确认删除？", {
           icon: 3, title: "提示"
         }, function (i) {
-          fetch("/project/del/" + id, { method: "delete" }).then((res) => {
+          fetch("/projects/del/" + id, { method: "delete" }).then((res) => {
             layer.close(i)
 
             return res.json()

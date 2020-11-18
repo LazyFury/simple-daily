@@ -11,6 +11,24 @@ import (
 // ProjectLog 项目日志
 type ProjectLog struct{}
 
+// Detail 日志详情
+func (p *ProjectLog) Detail(c *gin.Context) {
+	defer utils.GinRecover(c)
+	id, ok := c.Params.Get("id")
+	if !ok {
+		panic("id不可为空")
+	}
+
+	data, err := models.GetObjectOrNotFound(&models.ProjectLogModel{}, map[string]interface{}{
+		"id": id,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusOK, utils.JSONSuccess("", data))
+}
+
 // AddPage 添加日志
 func (p *ProjectLog) AddPage(c *gin.Context) {
 	projectID, _ := c.Params.Get("id")
@@ -22,11 +40,8 @@ func (p *ProjectLog) AddPage(c *gin.Context) {
 // UpdatePage 更新日志页面
 func (p *ProjectLog) UpdatePage(c *gin.Context) {
 	defer utils.GinRecover(c)
-	pid, _ := c.Params.Get("id")
 	lid, _ := c.Params.Get("lid")
-	if pid == "" {
-		panic("请输入项目id")
-	}
+
 	if lid == "" {
 		panic("请输入日志id")
 	}
@@ -38,8 +53,7 @@ func (p *ProjectLog) UpdatePage(c *gin.Context) {
 		panic(err)
 	}
 	c.HTML(http.StatusOK, "project/log/update.tmpl", map[string]interface{}{
-		"projectID": pid,
-		"log":       log,
+		"log": log,
 	})
 }
 
@@ -75,43 +89,41 @@ func (p *ProjectLog) Add(c *gin.Context) {
 func (p *ProjectLog) Update(c *gin.Context) {
 	defer utils.GinRecover(c)
 	lid, _ := c.Params.Get("lid")
-	pid, _ := c.Params.Get("id")
-	if pid == "" {
-		panic("请输入项目id")
-	}
+
 	if lid == "" {
 		panic("日志id不可空")
 	}
 	log := &models.ProjectLogModel{}
 	project := &models.ProjectModel{}
-	// 查找
+	// 查找日志
 	if err := models.DB.Where(map[string]interface{}{
-		"id":         lid,
-		"project_id": pid,
+		"id": lid,
 	}).First(log).Error; err != nil {
 		panic(err)
 	}
 
+	// 找到项目
 	if err := models.DB.Where(map[string]interface{}{
-		"id": pid,
+		"id": log.ProjectID,
 	}).First(project).Error; err != nil {
 		panic(err)
 	}
+	// 减去旧的进度
 	project.Progress -= log.PlusProgress
 
 	// 绑定更新
 	if err := c.ShouldBind(log); err != nil {
 		panic(err)
 	}
-
+	// 验证更新
 	if err := log.Validator(); err != nil {
 		panic(err)
 	}
-
+	// 更新日志
 	if err := models.DB.Save(log).Error; err != nil {
 		panic(err)
 	}
-
+	// 增加进度 更新项目
 	project.Progress += log.PlusProgress
 	if err := models.DB.Save(project).Error; err != nil {
 		panic(err)

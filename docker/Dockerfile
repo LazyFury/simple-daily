@@ -9,3 +9,4 @@ RUN echo 'Asia/Shanghai' >/etc/timezone
 RUN go get -u github.com/cosmtrek/air
 RUN go get -u github.com/gin-gonic/gin
 RUN go get -u gorm.io/gorm
+# RUN go get -u github.com/swaggo/swag/cmd/swag

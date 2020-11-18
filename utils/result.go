@@ -28,6 +28,9 @@ func JSON(code int, message string, data interface{}) Result {
 
 // JSONSuccess JSONSUCCESS
 func JSONSuccess(message string, data interface{}) Result {
+	if message == "" {
+		message = "获取成功"
+	}
 	return JSON(http.StatusOK, message, data)
 }
 

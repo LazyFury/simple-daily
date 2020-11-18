@@ -26,6 +26,11 @@ func (p *ProjectModel) TestVal() string {
 	return "hello"
 }
 
+// Object 自身
+func (p *ProjectModel) Object() interface{} {
+	return ProjectModel{}
+}
+
 // Validator 验证
 func (p *ProjectModel) Validator() (err error) {
 	p.Name = strings.Trim(p.Name, " ")
