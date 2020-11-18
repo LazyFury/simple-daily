@@ -13,6 +13,12 @@ import (
 func main() {
 	g := gin.Default()
 
+	// 自定义验证器
+	utils.RegValidator()
+
+	// recover panic
+	g.Use(gin.Recovery())
+
 	// 挂载静态文件
 	g.Use(static.Serve("/static", static.LocalFile("static", false)))
 

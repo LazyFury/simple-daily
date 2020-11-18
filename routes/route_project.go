@@ -133,7 +133,7 @@ func (p *Project) Add(c *gin.Context) {
 	project := &models.ProjectModel{}
 
 	if err := c.ShouldBindWith(project, binding.JSON); err != nil {
-		panic(utils.JSONError("绑定参数失败", err))
+		panic(utils.JSONError(err.Error(), err))
 	}
 
 	if err := project.Validator(); err != nil {
@@ -172,7 +172,7 @@ func (p *Project) Update(c *gin.Context) {
 	if err := project.Validator(); err != nil {
 		panic(err)
 	}
-
+	project.Reset()
 	row := db.Save(project)
 	if row.Error != nil {
 		panic(row.Error)

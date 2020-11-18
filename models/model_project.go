@@ -10,9 +10,9 @@ import (
 // ProjectModel 项目模型
 type ProjectModel struct {
 	Model
-	Name               string            `json:"name" form:"name" gorm:"NOT NULL"`
+	Name               string            `json:"name" binding:"requiredParams" form:"name" gorm:"NOT NULL"`
 	Describe           string            `json:"describe" form:"describe"`
-	Start              utils.JSONTime    `json:"start" form:"start"`
+	Start              utils.JSONTime    `json:"start"  form:"start"`
 	ExpectEnd          utils.JSONTime    `json:"expect_end" form:"expect_end"`
 	ActualDeliveryDate utils.JSONTime    `json:"actual_delivery_date" form:"actual_delivery_date"`
 	Progress           int               `json:"progress" form:"progress"`
@@ -24,16 +24,6 @@ var _ ModelType = &ProjectModel{}
 // TestVal 模板测试
 func (p *ProjectModel) TestVal() string {
 	return "hello"
-}
-
-// Objects 自身列表
-func (p *ProjectModel) Objects() interface{} {
-	return &[]ProjectModel{}
-}
-
-// Object 自身
-func (p *ProjectModel) Object() interface{} {
-	return ProjectModel{}
 }
 
 // Validator 验证

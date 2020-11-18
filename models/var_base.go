@@ -16,6 +16,13 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
+// Reset update之前 清除不允许修改的属性
+func (m *Model) Reset() {
+	m.ID = 0
+	m.CreatedAt = time.Time{}
+	m.UpdatedAt = time.Now()
+}
+
 type middleware func(db *gorm.DB) *gorm.DB
 
 // Objects List

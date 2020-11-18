@@ -2,6 +2,7 @@ package utils
 
 import (
 	"database/sql/driver"
+	"errors"
 	"fmt"
 	"time"
 
@@ -58,7 +59,13 @@ func (t *JSONTime) UnmarshalJSON(b []byte) error {
 		t.Time = tTime
 		return nil
 	}
-	return err
+
+	tTime, err = time.Parse(`"2006-01-02T15:04:05"`, str)
+	if err == nil {
+		t.Time = tTime
+		return nil
+	}
+	return errors.New("时间格式错误")
 }
 
 // Value Value

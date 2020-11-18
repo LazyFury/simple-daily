@@ -8,3 +8,10 @@ type UserModel struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+var _ ModelType = &UserModel{}
+
+// Validator 验证
+func (u *UserModel) Validator() error {
+	return nil
+}
