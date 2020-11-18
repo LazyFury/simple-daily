@@ -10,11 +10,15 @@ import (
 func GinRecover(c *gin.Context) {
 	if r := recover(); r != nil {
 		if err, ok := r.(error); ok {
-			c.JSON(http.StatusNotFound, JSONError(err.Error(), err))
+			c.JSON(http.StatusInternalServerError, JSONError(err.Error(), err))
 			return
 		}
 		if err, ok := r.(string); ok {
-			c.JSON(http.StatusOK, JSONError(err, nil))
+			c.JSON(http.StatusInternalServerError, JSONError(err, nil))
+			return
+		}
+		if err, ok := r.(ErrCode); ok {
+			c.JSON(http.StatusInternalServerError, JSON(err, "", nil))
 			return
 		}
 		if data, ok := r.(Result); ok {

@@ -19,14 +19,15 @@ func (p *ProjectLog) Detail(c *gin.Context) {
 		panic("id不可为空")
 	}
 
-	data, err := models.GetObjectOrNotFound(&models.ProjectLogModel{}, map[string]interface{}{
+	log := &models.ProjectLogModel{}
+	row := models.DB.Where(map[string]interface{}{
 		"id": id,
-	})
-	if err != nil {
-		panic(err)
+	}).First(log)
+	if row.Error != nil {
+		panic(utils.JSON(utils.NotFound, "", row.Error))
 	}
 
-	c.JSON(http.StatusOK, utils.JSONSuccess("", data))
+	c.JSON(http.StatusOK, utils.JSONSuccess("", log))
 }
 
 // AddPage 添加日志

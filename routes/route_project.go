@@ -9,6 +9,7 @@ import (
 	"github.com/Treblex/simple-daily/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
+	"gorm.io/gorm"
 )
 
 // Project 项目
@@ -17,9 +18,8 @@ type Project struct{}
 // Index 首页
 func (p *Project) Index(c *gin.Context) {
 	projects := &[]models.ProjectModel{}
-
-	db := models.DB
-	db.Order("updated_at desc").Find(projects)
+	page, size := models.GetPagingParams(c)
+	models.GetObjectsOrEmpty(projects, nil).Paging(page, size)
 
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
 		"projects": projects,
@@ -37,7 +37,6 @@ func (p *Project) Detail(c *gin.Context) {
 	if id == "" {
 		panic("请输入项目id")
 	}
-
 	// 初始化模型
 	project := &models.ProjectModel{}
 	// 查询详情
@@ -49,9 +48,15 @@ func (p *Project) Detail(c *gin.Context) {
 
 	// 查询日志
 	logs := &[]models.ProjectLogModel{}
-	row := models.DB.Where(map[string]interface{}{
-		"project_id": project.ID,
-	}).Order("created_at desc")
+	logsModel := models.GetObjectsOrEmpty(
+		logs,
+		map[string]interface{}{
+			"project_id": project.ID,
+		},
+		func(db *gorm.DB) *gorm.DB {
+			return db.Order("created_at desc")
+		},
+	)
 
 	// 如果需要时间筛选
 	if start != "" {
@@ -66,25 +71,23 @@ func (p *Project) Detail(c *gin.Context) {
 		}
 		startTime, err := time.Parse("2006-01-02", start)
 		if err == nil {
-			row = row.Where("`created_at` BETWEEN ? AND ?", startTime, endTime)
+			logsModel.Model = logsModel.Model.Where("`created_at` BETWEEN ? AND ?", startTime, endTime)
 		}
 
 	}
 
-	if err := row.Find(logs).Error; err != nil {
+	if err := logsModel.All(); err != nil {
 		panic(err)
 	}
 
-	project.Logs = *logs
-
 	jobs := []string{} //聚合工作内容
 	plusProgress := 0  //增加的进度
+	project.Logs = *logs
 
 	for _, item := range *logs {
 		jobs = append(jobs, item.Content)
 		plusProgress += item.PlusProgress
 	}
-
 	// c.JSON(http.StatusOK, utils.JSONSuccess("", project))
 
 	c.HTML(http.StatusOK, "project/detail.tmpl", map[string]interface{}{
@@ -146,13 +149,6 @@ func (p *Project) Add(c *gin.Context) {
 }
 
 // Update 更新项目
-// @Summary List accounts
-// @Description get accounts
-// @Accept  json
-// @Produce  json
-// @Param id path string true "项目ID"
-// @Param body body models.ProjectModel true "更新"
-// @Router /project/update/{id} [put]
 func (p *Project) Update(c *gin.Context) {
 	defer utils.GinRecover(c)
 	id, _ := c.Params.Get("id")

@@ -26,6 +26,11 @@ func (p *ProjectModel) TestVal() string {
 	return "hello"
 }
 
+// Objects 自身列表
+func (p *ProjectModel) Objects() interface{} {
+	return &[]ProjectModel{}
+}
+
 // Object 自身
 func (p *ProjectModel) Object() interface{} {
 	return ProjectModel{}

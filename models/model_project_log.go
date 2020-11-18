@@ -22,6 +22,11 @@ func (p *ProjectLogModel) IsToday() bool {
 	return p.CreatedAt.After(today)
 }
 
+// Objects 自身列表实例
+func (p *ProjectLogModel) Objects() interface{} {
+	return &ProjectLogModel{}
+}
+
 // Object 自身
 func (p *ProjectLogModel) Object() interface{} {
 	return &ProjectLogModel{}
