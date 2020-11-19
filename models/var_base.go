@@ -27,13 +27,19 @@ type (
 		Obj        interface{}
 		Model      *gorm.DB
 		Pagination *Pagination
+		Result     *Result
+	}
+	// Result Result
+	Result struct {
+		List       interface{} `json:"list"`
+		Pagination Pagination  `json:"paging"`
 	}
 	// Pagination 分页数据
 	Pagination struct {
-		Page      int
-		Size      int
-		Total     int
-		URLFormat string
+		Page      int    `json:"page"`
+		Size      int    `json:"size"`
+		Total     int    `json:"total"`
+		URLFormat string `json:"-"`
 	}
 	// Page 分页
 	Page struct {
@@ -87,6 +93,10 @@ func (o *Objects) Paging(page int, size int) (err error) {
 		Size:  size,
 		Page:  page,
 		Total: int(count),
+	}
+	o.Result = &Result{
+		List:       o.Obj,
+		Pagination: *o.Pagination,
 	}
 	return
 }

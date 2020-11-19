@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"net/http"
 
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/routes"
@@ -12,6 +13,20 @@ import (
 
 func main() {
 	g := gin.Default()
+
+	g.HandleMethodNotAllowed = true
+
+	g.NoMethod(func(c *gin.Context) {
+		c.JSON(http.StatusMethodNotAllowed, utils.JSON(http.StatusMethodNotAllowed, "方法不允许", nil))
+	})
+
+	g.NoRoute(func(c *gin.Context) {
+		if utils.ReqFromHTML(c) {
+			c.HTML(http.StatusMovedPermanently, "404.tmpl", nil)
+			return
+		}
+		c.JSON(http.StatusNotFound, utils.JSON(http.StatusNotFound, "页面不存在", nil))
+	})
 
 	// 自定义验证器
 	utils.RegValidator()
