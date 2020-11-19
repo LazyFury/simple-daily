@@ -1,6 +1,8 @@
 package models
 
 import (
+	"fmt"
+	"math"
 	"strconv"
 	"time"
 
@@ -16,19 +18,55 @@ type Model struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }
 
-// Reset update之前 清除不允许修改的属性
-func (m *Model) Reset() {
-	m.ID = 0
-	m.CreatedAt = time.Time{}
-	m.UpdatedAt = time.Now()
+// Middleware 查询中间操作
+type Middleware func(db *gorm.DB) *gorm.DB
+
+type (
+	// Objects List
+	Objects struct {
+		Obj        interface{}
+		Model      *gorm.DB
+		Pagination *Pagination
+	}
+	// Pagination 分页数据
+	Pagination struct {
+		Page      int
+		Size      int
+		Total     int
+		URLFormat string
+	}
+	// Page 分页
+	Page struct {
+		Page int
+		URL  string
+	}
+)
+
+// SetURLFormat 设置url
+func (p *Pagination) SetURLFormat(url string) string {
+	p.URLFormat = url
+	return ""
 }
 
-type middleware func(db *gorm.DB) *gorm.DB
+// URL 获取url
+func (p *Pagination) URL(page int, size int) string {
+	return fmt.Sprintf(p.URLFormat, page, size)
+}
 
-// Objects List
-type Objects struct {
-	Obj   interface{}
-	Model *gorm.DB
+// Pages 总页数
+func (p *Pagination) Pages() int {
+	f := float64(p.Total) / float64(p.Size)
+	return int(math.Ceil(f))
+}
+
+// Range 生成数组
+func (p *Pagination) Range() []Page {
+	_page := make([]Page, p.Pages())
+	for i := range _page {
+		_page[i].Page = i + 1
+		_page[i].URL = p.URL(i+1, p.Size)
+	}
+	return _page
 }
 
 // All 全部数据
@@ -40,9 +78,15 @@ func (o *Objects) All() (err error) {
 // Paging 分页数据
 func (o *Objects) Paging(page int, size int) (err error) {
 	offset := size * (page - 1)
-	row := o.Model.Offset(offset).Limit(size).Find(o.Obj)
+	var count int64
+	row := o.Model.Count(&count).Offset(offset).Limit(size).Find(o.Obj)
 	if row.Error != nil {
 		err = row.Error
+	}
+	o.Pagination = &Pagination{
+		Size:  size,
+		Page:  page,
+		Total: int(count),
 	}
 	return
 }
@@ -51,9 +95,12 @@ func (o *Objects) Paging(page int, size int) (err error) {
 // 可选参数 middleware models.middleware 接收一个 *gorm.DB 返回 *gorm.DB
 func GetObjectsOrEmpty(obj interface{}, query interface{}, args ...interface{}) *Objects {
 	row := DB.Model(obj)
+	if query != nil {
+		row = row.Where(query)
+	}
 	// 可选参数
 	for _, arg := range args {
-		midd, ok := arg.(middleware)
+		midd, ok := arg.(Middleware)
 		if ok {
 			row = midd(row)
 		}

@@ -45,6 +45,7 @@ func (t JSONTime) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON UnmarshalJSON
 func (t *JSONTime) UnmarshalJSON(b []byte) error {
 	var str = string(b)
+
 	fmt.Printf(str + "\n")
 	tTime, err := time.Parse(`"`+t.localLayout()+`"`, str)
 	if err == nil {
@@ -65,7 +66,7 @@ func (t *JSONTime) UnmarshalJSON(b []byte) error {
 		t.Time = tTime
 		return nil
 	}
-	return errors.New("时间格式错误")
+	return errors.New("时间格式错误 支持 2006-01-02T15:04:05 ｜ 2006-01-02 ｜ 2006年01月02日 15:04:05")
 }
 
 // Value Value

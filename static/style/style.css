@@ -4,3 +4,7 @@
 .mdui-table tr td {
   padding: 6px;
 }
+.layui-layout-admin .layui-logo {
+  color: #fff !important;
+  font-weight: bold;
+}

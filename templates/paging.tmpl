@@ -1,0 +1,29 @@
+{{define "paging"}}
+<div id="pagination"></div>
+<script>
+    $(document).ready(function () {
+        layui.use("laydate", function () {
+            var laypage = layui.laypage
+            //完整功能
+            laypage.render({
+                elem: 'pagination'
+                , count: '{{.Total}}'
+                , curr: '{{.Page}}',
+                limit: '{{.Size}}',
+                limits: [2, 5, 10, 20, 30, 100],
+                layout: ['count', 'prev', 'page', 'next', 'limit', 'refresh', 'skip']
+                , jump: function (obj, first) {
+                    console.log(obj)
+                    var curr = obj.curr
+                    var limit = obj.limit
+                    var url = '{{.URLFormat}}' + `&page=${curr}&size=${limit}`
+                    if (!first) {
+                        location.href = url
+                    }
+                }
+            });
+        })
+
+    })
+</script>
+{{end}}

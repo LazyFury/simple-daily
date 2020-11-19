@@ -19,10 +19,14 @@ type Project struct{}
 func (p *Project) Index(c *gin.Context) {
 	projects := &[]models.ProjectModel{}
 	page, size := models.GetPagingParams(c)
-	models.GetObjectsOrEmpty(projects, nil).Paging(page, size)
-
+	var midd models.Middleware = func(db *gorm.DB) *gorm.DB {
+		return db.Order("updated_at desc,id desc")
+	}
+	projectModel := models.GetObjectsOrEmpty(projects, nil, midd)
+	projectModel.Paging(page, size)
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
-		"projects": projects,
+		"projects":   projects,
+		"pagination": projectModel.Pagination,
 	})
 }
 
@@ -159,20 +163,19 @@ func (p *Project) Update(c *gin.Context) {
 	db := models.DB
 	project := &models.ProjectModel{}
 
-	if db.Where(map[string]interface{}{
+	if err := db.Where(map[string]interface{}{
 		"id": id,
-	}).First(project).RowsAffected == 0 {
-		panic("项目不存在")
+	}).First(project).Error; err != nil {
+		panic(utils.JSONError("项目不存在", err.Error()))
 	}
 
 	if err := c.ShouldBindJSON(project); err != nil {
-		panic(utils.JSONError("绑定参数失败", err))
+		panic(utils.JSONError("绑定参数失败", err.Error()))
 	}
 
 	if err := project.Validator(); err != nil {
 		panic(err)
 	}
-	project.Reset()
 	row := db.Save(project)
 	if row.Error != nil {
 		panic(row.Error)

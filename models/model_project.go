@@ -10,7 +10,7 @@ import (
 // ProjectModel 项目模型
 type ProjectModel struct {
 	Model
-	Name               string            `json:"name" binding:"requiredParams" form:"name" gorm:"NOT NULL"`
+	Name               string            `json:"name" form:"name" gorm:"NOT NULL"`
 	Describe           string            `json:"describe" form:"describe"`
 	Start              utils.JSONTime    `json:"start"  form:"start"`
 	ExpectEnd          utils.JSONTime    `json:"expect_end" form:"expect_end"`

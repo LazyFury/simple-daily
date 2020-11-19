@@ -121,13 +121,11 @@ func (p *ProjectLog) Update(c *gin.Context) {
 		panic(err)
 	}
 	// 更新日志
-	log.Reset()
 	if err := models.DB.Save(log).Error; err != nil {
 		panic(err)
 	}
 	// 增加进度 更新项目
 	project.Progress += log.PlusProgress
-	project.Reset()
 	if err := models.DB.Save(project).Error; err != nil {
 		panic(err)
 	}

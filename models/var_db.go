@@ -18,7 +18,7 @@ func Connect(dsn string) (err error) {
 		return
 	}
 
-	db.AutoMigrate(&ProjectModel{}, &ProjectLogModel{})
+	db.AutoMigrate(&ProjectModel{}, &ProjectLogModel{}, &UserModel{})
 
 	DB = db
 

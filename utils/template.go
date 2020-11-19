@@ -147,4 +147,27 @@ var TemplateFuns = template.FuncMap{
 		now := time.Now()
 		return time.Date(now.Year(), now.Month()-1, 1, 0, 0, 0, 0, now.Location()).Format("2006-01-02")
 	},
+	"url": MakeURL,
+	"strJoin": func(str string, args ...interface{}) string {
+		return fmt.Sprintf(str, args...)
+	},
+}
+
+// MakeURL 管理模版中的url
+func MakeURL(_type string, args ...interface{}) string {
+	urls := map[string]string{
+		// 项目
+		"projectDetail": "/projects/detail/%d",
+		"projectAdd":    "/projects/add",
+		"projectUpdate": "/projects/update/%d",
+		"projectDel":    "/projects/del/", //ajax拼接id
+		// 项目日志
+		"projectAddLog":    "/projects/detail/%d/logs/add",
+		"projectUpdateLog": "/project-logs/update/%d",
+	}
+	urlFormat, ok := urls[_type]
+	if ok {
+		return fmt.Sprintf(urlFormat, args...)
+	}
+	return "/error"
 }

@@ -86,11 +86,10 @@
         </div>
         <hr>
         <div style="padding: 10px 0">
-            <a href="javascript:open('/projects/detail/{{.project.ID}}/logs/add');">
+            <a href='javascript:open(`{{url "projectAddLog" .project.ID}}`);'>
                 <button type="button" class="layui-btn">
                     <i class="layui-icon layui-icon-edit"></i>添加日志</button>
             </a>
-            <button type="disabled" class="layui-btn layui-btn-primary">项目延期:Todo</button>
             <button type="disabled" class="layui-btn layui-btn-primary">待处理任务</button>
         </div>
 
@@ -119,7 +118,7 @@
                     <td>{{.Content}}</td>
                     <td>
                         {{if .IsToday}}
-                        <a href="javascript:open('/project-logs/update/{{.ID}}');">编辑</a>
+                        <a href='javascript:open(`{{url "projectUpdateLog" .ID}}`);'>编辑</a>
                         {{end}}
                     </td>
                 </tr>
