@@ -44,23 +44,18 @@
                 layui.use("form", function () {
                     var form = layui.form
                     form.on("submit(setProfile)", function (e) {
-
+                        var form = e.form
+                        request("", {
+                            method: "post", body: new FormData(form)
+                        }).then(body => {
+                            setTimeout(() => {
+                                location.reload()
+                            }, 1000)
+                        })
+                        return false
                     })
                 })
 
-                layui.use("upload", function () {
-                    var upload = layui.upload
-                    var $ = jQuery
-                    var uploader = upload.render({
-                        elem: "#upload",
-                        before: function (obj) {
-                            console.log(obj)
-                            obj.preview(function (index, file, result) {
-                                $('#demo1').attr('src', result); //图片链接（base64）
-                            });
-                        }
-                    })
-                })
             })
         </script>
     </div>

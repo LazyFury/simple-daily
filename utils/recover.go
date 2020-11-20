@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -10,7 +9,7 @@ import (
 // GinRecover Recover
 func GinRecover(c *gin.Context) {
 	if r := recover(); r != nil {
-		result := JSON(http.StatusInternalServerError,"",nil)
+		result := JSON(http.StatusInternalServerError, "", nil)
 
 		//普通错误
 		if err, ok := r.(error); ok {
@@ -25,24 +24,23 @@ func GinRecover(c *gin.Context) {
 		if err, ok := r.(ErrCode); ok {
 			result.Code = err
 			result.Message = StatusText(err)
-		}else if err,ok:= r.(int);ok{
+		} else if err, ok := r.(int); ok {
 			result.Message = StatusText(ErrCode(err))
 		}
 		//完整错误类型
 		if data, ok := r.(Result); ok {
 			result = data
 		}
-		var code = http.StatusInternalServerError
-		if http.StatusText(int(result.Code))!=""{
-			code = int(result.Code)
-		}
-		log.Print(result)
+		var code = http.StatusOK
+		// if http.StatusText(int(result.Code)) != "" {
+		// 	code = int(result.Code)
+		// }
 		//返回内容
-		if ReqFromHTML(c){
-			c.HTML(code,"404.tmpl",result)
+		if ReqFromHTML(c) {
+			c.HTML(code, "404.tmpl", result)
 			return
 		}
-		c.JSON(code,result)
+		c.JSON(code, result)
 	}
 
 }

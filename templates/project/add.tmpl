@@ -113,14 +113,14 @@
                         let field = e.field || {}
 
                         field.progress = field.progress * 1
-                        fetch("/projects/add", {
+                        request("/projects/add", {
                             method: "post", body: JSON.stringify(field), headers: {
                                 "content-type": "application/json"
                             }
                         }).then(res => {
-                            // window.parent.location.reload()
-                            console.log(parent.location.reload())
-                            return res.json()
+                            setTimeout(() => {
+                                parent.location.reload()
+                            }, 500)
                         })
                         return false
                     })

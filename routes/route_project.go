@@ -24,7 +24,7 @@ func (p *Project) Index(c *gin.Context) {
 	projects := &[]models.ProjectModel{}
 	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
 		return db.Where(map[string]interface{}{
-			"user_id":user.ID,
+			"user_id": user.ID,
 		}).Order("updated_at desc,id desc")
 	})
 
@@ -54,10 +54,10 @@ func (p *Project) Detail(c *gin.Context) {
 	project := &models.ProjectModel{}
 	// 查询详情
 	if err := models.DB.Where(map[string]interface{}{
-		"id": id,
-		"user_id":user.ID,
+		"id":      id,
+		"user_id": user.ID,
 	}).First(project).Error; err != nil {
-		panic(utils.JSON(utils.NotFound,"",nil))
+		panic(utils.JSON(utils.NotFound, "", nil))
 	}
 
 	// 查询日志
@@ -130,10 +130,10 @@ func (p *Project) UpdatePage(c *gin.Context) {
 
 	project := &models.ProjectModel{}
 	if err := models.DB.Where(map[string]interface{}{
-		"id": id,
-		"user_id":user.ID,
+		"id":      id,
+		"user_id": user.ID,
 	}).First(project).Error; err != nil {
-		panic(utils.JSON(utils.NotFound,"",nil))
+		panic(utils.JSON(utils.NotFound, "", nil))
 	}
 
 	c.HTML(http.StatusOK, "project/update.tmpl", map[string]interface{}{
@@ -176,10 +176,10 @@ func (p *Project) Update(c *gin.Context) {
 	project := &models.ProjectModel{}
 
 	if err := db.Where(map[string]interface{}{
-		"id": id,
-		"user_id":user.ID,
+		"id":      id,
+		"user_id": user.ID,
 	}).First(project).Error; err != nil {
-		panic(utils.JSON(utils.NotFound,"",err))
+		panic(utils.JSON(utils.NotFound, "", err))
 	}
 
 	if err := c.ShouldBindJSON(project); err != nil {

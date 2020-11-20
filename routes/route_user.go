@@ -150,5 +150,5 @@ func (u *User) Update(c *gin.Context) {
 		panic(err)
 	}
 	c.SetCookie("token", token, 3600*24, "/", "", false, true)
-	c.Redirect(http.StatusMovedPermanently, "/users/profile")
+	c.JSON(http.StatusOK, utils.JSONSuccess("更新成功", nil))
 }

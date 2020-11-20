@@ -5,6 +5,7 @@ import (
 	"io"
 	"mime/multipart"
 	"net/http"
+	"os"
 	"path"
 	"path/filepath"
 	"strings"
@@ -22,6 +23,7 @@ type Uploader struct {
 	BaseDir      string
 	UploadMethod uploadMethod
 	GetFile      getFile
+	MaxSize      int
 }
 
 // Default 默认上传类型和文件夹
@@ -51,6 +53,16 @@ func (u *Uploader) OnlyAcceptsExt(httpContext *http.Request, acceptsExt []string
 	}
 	err = errors.New("不允许上传这种类型的文件")
 	return
+}
+
+//Size 获取文件大小的接口
+type Size interface {
+	Size() int64
+}
+
+//Stat 获取文件信息的接口
+type Stat interface {
+	Stat() (os.FileInfo, error)
 }
 
 // acceptsExt  这里是一个扩展到类型，默认到图片，视频 压缩包类型，已经写在默认方法中了
@@ -86,10 +98,26 @@ func (u *Uploader) uploadBase(file *multipart.FileHeader, acceptsExt []string, f
 	if err != nil {
 		err = errors.New("打开文件失败")
 		return
-
 	}
 	defer src.Close() //函数结束时自动关闭文件
 
+	var size = 0
+	if fileInterface, ok := src.(Size); ok {
+		size = int(fileInterface.Size())
+	}
+	if stat, ok := src.(Stat); ok {
+		info, _err := stat.Stat()
+		if err != nil {
+			err = _err
+			return
+		}
+		size = int(info.Size())
+	}
+
+	if size > u.MaxSize {
+		err = errors.New("文件过大，无法上传，请上传 2M 内的图片")
+		return
+	}
 	//创建文件夹
 	dir, err := GetDir(path.Join(u.BaseDir, folder), time.Now().Format("2006_01_02"))
 	if err != nil {

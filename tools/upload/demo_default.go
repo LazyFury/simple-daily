@@ -6,5 +6,6 @@ func NewDefaultUploader() *Uploader {
 		BaseDir:      "./static/upload",
 		UploadMethod: defaultUpload,
 		GetFile:      defaultGetFile,
+		MaxSize:      1024 * 1024 * 2,
 	}
 }

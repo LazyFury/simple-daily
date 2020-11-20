@@ -47,8 +47,8 @@
           <td>{{timeFormat .UpdatedAt}}</td>
           <td><a href='{{url "projectDetail" .ID}}'>查看日志</a></td>
           <td><a href='javascript:open(`{{url "projectUpdate" .ID}}`);'>编辑</a>
-            <!-- / <a
-              href="javascript:del({{.ID}});">删除</a> -->
+            <!-- / -->
+            <!-- <a href="javascript:del({{.ID}});">删除</a> -->
           </td>
         </tr>
         {{ end}}

@@ -23,10 +23,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9525e11-427a-41cd-a3de-53b514152a4d" name="Default Changelist" comment="typo">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/upload/demo_aliyun_oss.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/demo_aliyun_oss.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/route_project.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_project.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/route_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/script/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script/main.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/header.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/header.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/project/add.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/project/add.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/project/index.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/project/index.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/user/profile.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/profile.tmpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/upload/demo_default.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/demo_default.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/upload/upload.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/upload.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/recover.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/recover.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
