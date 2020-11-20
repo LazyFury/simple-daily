@@ -1,0 +1,24 @@
+{
+  "mysql": {
+    "user": "suke",
+    "password": "",
+    "host": "localhost",
+    "port": "1233",
+    "database": "test",
+    "Param": "&loc=Asia%2FShanghai"
+  },
+  "base_url": "/",
+  "table_prefix": "ek_server",
+  "wechat": {
+    "appid": "",
+    "appsecret": ""
+  },
+  "port": 8080,
+  "mail": {
+    "host": "smtp.qq.com",
+    "nickname": "比鲁斯",
+    "password": "",
+    "port": "587",
+    "user": "@qq.com"
+  }
+}

@@ -1,0 +1,66 @@
+{{$site := site "用户资料"}}
+{{$site.SetUser .user}}
+{{template "header"  $site}}
+<div>
+    <div>
+        <h1 style="padding:10px">用户信息</h1>
+        <hr />
+        <form action="" method="POST" enctype="multipart/form-data" class="layui-form" style="width: 360px">
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="file">用户头像：</label>
+                <div class="layui-input-block">
+                    <input type='file' name="file" id="file" />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="nick">用户昵称：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" value="{{.user.Nick}}" placeholder="请输入用户昵称" lay-verify="required"
+                        name="nick" id="nick" />
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" for="email">用户邮箱：</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" value="{{.user.Email}}" placeholder="请输入用户邮箱" name="email" id="email" />
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="setProfile">立即提交</button>
+                </div>
+            </div>
+
+        </form>
+
+        <script>
+            $(document).ready(function () {
+                layui.use("form", function () {
+                    var form = layui.form
+                    form.on("submit(setProfile)", function (e) {
+
+                    })
+                })
+
+                layui.use("upload", function () {
+                    var upload = layui.upload
+                    var $ = jQuery
+                    var uploader = upload.render({
+                        elem: "#upload",
+                        before: function (obj) {
+                            console.log(obj)
+                            obj.preview(function (index, file, result) {
+                                $('#demo1').attr('src', result); //图片链接（base64）
+                            });
+                        }
+                    })
+                })
+            })
+        </script>
+    </div>
+</div>
+{{template "footer"}}

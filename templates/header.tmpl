@@ -19,11 +19,11 @@
         <li class="layui-nav-item">
             <a href="javascript:;">
                 <img src="{{.User.HeadPic}}" class="layui-nav-img">
-                {{.User.Nick}}
+                {{strDefault .User.Nick "未登录"}}
             </a>
             <dl class="layui-nav-child">
-                <dd><a href="/profile">基本资料</a></dd>
-                <dd><a href="/setting">安全设置</a></dd>
+                <dd><a href="/users/profile">基本资料</a></dd>
+                <dd><a href="/users/setting">安全设置</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item"><a href="/logout">退了</a></li>

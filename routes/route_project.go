@@ -17,13 +17,20 @@ type Project struct{}
 
 // Index 首页
 func (p *Project) Index(c *gin.Context) {
-	projects := &[]models.ProjectModel{}
+	defer utils.GinRecover(c)
 	page, size := models.GetPagingParams(c)
-	var midd models.Middleware = func(db *gorm.DB) *gorm.DB {
-		return db.Order("updated_at desc,id desc")
+	user := c.MustGet("user").(*models.UserModel)
+
+	projects := &[]models.ProjectModel{}
+	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
+		return db.Where(map[string]interface{}{
+			"user_id":user.ID,
+		}).Order("updated_at desc,id desc")
+	})
+
+	if err := projectModel.Paging(page, size); err != nil {
+		panic(err)
 	}
-	projectModel := models.GetObjectsOrEmpty(projects, nil, midd)
-	_ = projectModel.Paging(page, size)
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
 		"projects":   projects,
 		"pagination": projectModel.Pagination,
@@ -34,6 +41,7 @@ func (p *Project) Index(c *gin.Context) {
 // Detail 项目详情
 func (p *Project) Detail(c *gin.Context) {
 	defer utils.GinRecover(c)
+	user := c.MustGet("user").(*models.UserModel)
 
 	id, _ := c.Params.Get("id")
 	start, _ := c.GetQuery("start")
@@ -47,21 +55,19 @@ func (p *Project) Detail(c *gin.Context) {
 	// 查询详情
 	if err := models.DB.Where(map[string]interface{}{
 		"id": id,
+		"user_id":user.ID,
 	}).First(project).Error; err != nil {
-		panic(err)
+		panic(utils.JSON(utils.NotFound,"",nil))
 	}
 
 	// 查询日志
 	logs := &[]models.ProjectLogModel{}
-	logsModel := models.GetObjectsOrEmpty(
-		logs,
-		map[string]interface{}{
+
+	logsModel := models.GetObjectsOrEmpty(logs, nil, func(db *gorm.DB) *gorm.DB {
+		return db.Where(map[string]interface{}{
 			"project_id": project.ID,
-		},
-		func(db *gorm.DB) *gorm.DB {
-			return db.Order("created_at desc")
-		},
-	)
+		}).Order("created_at desc,id desc")
+	})
 
 	// 如果需要时间筛选
 	if start != "" {
@@ -120,11 +126,14 @@ func (p *Project) UpdatePage(c *gin.Context) {
 		panic("请输入项目id")
 	}
 
+	user := c.MustGet("user").(*models.UserModel)
+
 	project := &models.ProjectModel{}
 	if err := models.DB.Where(map[string]interface{}{
 		"id": id,
+		"user_id":user.ID,
 	}).First(project).Error; err != nil {
-		panic("数据不存在")
+		panic(utils.JSON(utils.NotFound,"",nil))
 	}
 
 	c.HTML(http.StatusOK, "project/update.tmpl", map[string]interface{}{
@@ -135,8 +144,8 @@ func (p *Project) UpdatePage(c *gin.Context) {
 // Add 添加项目
 func (p *Project) Add(c *gin.Context) {
 	defer utils.GinRecover(c)
-
-	project := &models.ProjectModel{}
+	user := c.MustGet("user").(*models.UserModel)
+	project := &models.ProjectModel{UserID: user.ID}
 
 	if err := c.ShouldBindWith(project, binding.JSON); err != nil {
 		panic(utils.JSONError(err.Error(), err))
@@ -156,19 +165,21 @@ func (p *Project) Add(c *gin.Context) {
 
 // Update 更新项目
 func (p *Project) Update(c *gin.Context) {
-	defer utils.GinRecover(c)
 	id, _ := c.Params.Get("id")
 	if id == "" {
 		panic("请输入项目id")
 	}
+
+	user := c.MustGet("user").(*models.UserModel)
 
 	db := models.DB
 	project := &models.ProjectModel{}
 
 	if err := db.Where(map[string]interface{}{
 		"id": id,
+		"user_id":user.ID,
 	}).First(project).Error; err != nil {
-		panic(utils.JSONError("项目不存在", err.Error()))
+		panic(utils.JSON(utils.NotFound,"",err))
 	}
 
 	if err := c.ShouldBindJSON(project); err != nil {
@@ -178,6 +189,9 @@ func (p *Project) Update(c *gin.Context) {
 	if err := project.Validator(); err != nil {
 		panic(err)
 	}
+
+	project.UserID = user.ID
+
 	row := db.Save(project)
 	if row.Error != nil {
 		panic(row.Error)

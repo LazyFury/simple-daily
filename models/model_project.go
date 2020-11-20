@@ -10,6 +10,7 @@ import (
 // ProjectModel 项目模型
 type ProjectModel struct {
 	Model
+	UserID             uint              `json:"user_id" gorm:"not null;"`
 	Name               string            `json:"name" form:"name" gorm:"NOT NULL"`
 	Describe           string            `json:"describe" form:"describe"`
 	Start              utils.JSONTime    `json:"start"  form:"start"`

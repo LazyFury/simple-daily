@@ -2,7 +2,13 @@ package routes
 
 import (
 	"github.com/Treblex/simple-daily/middleware"
+	"github.com/Treblex/simple-daily/tools/upload"
 	"github.com/gin-gonic/gin"
+)
+
+var (
+	// Uploader 上传
+	Uploader = upload.NewDefaultUploader()
 )
 
 // Start 注册路由
@@ -33,13 +39,13 @@ func Start(g *gin.RouterGroup) {
 
 	// 用户
 	user := &User{}
-	userRouter := g.Group("/users")
-
-	userRouter.GET("/", middleware.Auth, user.Index)
-	userRouter.PUT("/update", middleware.Auth, user.Update)
+	userRouter := auth.Group("/users")
+	userRouter.GET("/", user.Index)
+	userRouter.GET("/profile", user.UpdateProfile)
+	userRouter.POST("/profile", user.Update)
 
 	g.POST("/reg", user.Add)
-	g.POST("/login", user.Login)
 	g.GET("/login", user.LoginPage)
+	g.POST("/login", user.Login)
 	g.GET("/logout", user.LogOut)
 }

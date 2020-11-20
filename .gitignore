@@ -3,3 +3,5 @@ sqlite.db
 tmp/
 go.sum
 *backup.sql
+static/upload/*
+config/config.json

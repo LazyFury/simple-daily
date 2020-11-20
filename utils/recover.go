@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -9,23 +10,39 @@ import (
 // GinRecover Recover
 func GinRecover(c *gin.Context) {
 	if r := recover(); r != nil {
+		result := JSON(http.StatusInternalServerError,"",nil)
+
+		//普通错误
 		if err, ok := r.(error); ok {
-			c.JSON(http.StatusInternalServerError, JSONError(err.Error(), err))
-			return
+			result.Message = err.Error()
+			result.Data = err
 		}
+		//错误提示
 		if err, ok := r.(string); ok {
-			c.JSON(http.StatusInternalServerError, JSONError(err, nil))
-			return
+			result.Message = err
 		}
+		//错误码
 		if err, ok := r.(ErrCode); ok {
-			c.JSON(http.StatusInternalServerError, JSON(err, "", nil))
-			return
+			result.Code = err
+			result.Message = StatusText(err)
+		}else if err,ok:= r.(int);ok{
+			result.Message = StatusText(ErrCode(err))
 		}
+		//完整错误类型
 		if data, ok := r.(Result); ok {
-			c.JSON(http.StatusOK, data)
+			result = data
+		}
+		var code = http.StatusInternalServerError
+		if http.StatusText(int(result.Code))!=""{
+			code = int(result.Code)
+		}
+		log.Print(result)
+		//返回内容
+		if ReqFromHTML(c){
+			c.HTML(code,"404.tmpl",result)
 			return
 		}
-		c.JSON(http.StatusInternalServerError, JSONError("error", nil))
+		c.JSON(code,result)
 	}
 
 }

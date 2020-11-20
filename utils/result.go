@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"net/http"
 	"time"
 )
 
@@ -32,6 +33,8 @@ const (
 	NotFound
 )
 
+
+
 // ErrorCodeText 错误提示
 var ErrorCodeText = map[ErrCode]string{
 	Success:      "获取成功",
@@ -47,6 +50,9 @@ var BuildBy = time.Now()
 // StatusText StatusText
 func StatusText(code ErrCode) string {
 	msg := ErrorCodeText[code]
+	if msg == ""{
+		msg = http.StatusText(int(code))
+	}
 	if msg == "" {
 		msg = "未知错误码"
 	}

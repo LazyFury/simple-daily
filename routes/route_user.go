@@ -3,6 +3,7 @@ package routes
 import (
 	"crypto/md5"
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Treblex/simple-daily/middleware"
@@ -100,28 +101,54 @@ func (u *User) Add(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.JSONSuccess("注册成功", user))
 }
 
+//UpdateProfile 更新用户信息
+func (u *User) UpdateProfile(c *gin.Context) {
+	user := c.MustGet("user").(*models.UserModel)
+	if err := models.DB.First(user).Error; err != nil {
+		log.Printf("%v", err)
+		panic(err)
+	}
+	c.HTML(http.StatusOK, "user/profile.tmpl", map[string]interface{}{
+		"user": user,
+	})
+}
+
 // Update 更新
 func (u *User) Update(c *gin.Context) {
 	defer utils.GinRecover(c)
+	user := c.MustGet("user").(*models.UserModel)
 
-	user := &models.UserModel{}
-	if err := models.DB.Where(map[string]interface{}{
-		"id": 0,
-	}).First(user).Error; err != nil {
+	if err := models.DB.First(user).Error; err != nil {
 		panic("用户不存在")
+	}
+
+	_, getFileErr := c.FormFile("file")
+	if getFileErr == nil {
+		path, err := Uploader.Default(c.Request)
+		if err != nil {
+			panic(err)
+		}
+		user.HeadPic = path
 	}
 
 	if err := c.ShouldBind(user); err != nil {
 		panic(err)
 	}
 
+	log.Print(user.Password)
+
 	if err := user.Validator(); err != nil {
 		panic(err)
 	}
 
-	if err := models.DB.Save(user).Error; err != nil {
+	row := models.DB.Save(user)
+	if err := row.Error; err != nil {
 		panic(err)
 	}
-
-	c.JSON(http.StatusOK, utils.JSONSuccess("更新成功", user))
+	token, err := middleware.CreateToken(*user)
+	if err != nil {
+		panic(err)
+	}
+	c.SetCookie("token", token, 3600*24, "/", "", false, true)
+	c.Redirect(http.StatusMovedPermanently, "/users/profile")
 }

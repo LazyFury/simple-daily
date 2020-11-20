@@ -103,17 +103,14 @@ func (o *Objects) Paging(page int, size int) (err error) {
 
 // GetObjectsOrEmpty 获取列表 \n
 // 可选参数 middleware models.middleware 接收一个 *gorm.DB 返回 *gorm.DB
-func GetObjectsOrEmpty(obj interface{}, query interface{}, args ...interface{}) *Objects {
+func GetObjectsOrEmpty(obj interface{}, query interface{}, args ...Middleware) *Objects {
 	row := DB.Model(obj)
 	if query != nil {
 		row = row.Where(query)
 	}
 	// 可选参数
-	for _, arg := range args {
-		midd, ok := arg.(Middleware)
-		if ok {
-			row = midd(row)
-		}
+	for _, midd := range args {
+		row = midd(row)
 	}
 	return &Objects{
 		Model: row,

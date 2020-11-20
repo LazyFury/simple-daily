@@ -18,22 +18,23 @@ func main() {
 	g.HandleMethodNotAllowed = true
 
 	g.NoMethod(func(c *gin.Context) {
-		c.JSON(http.StatusMethodNotAllowed, utils.JSON(http.StatusMethodNotAllowed, "方法不允许", nil))
+		panic(utils.JSON(http.StatusMethodNotAllowed, "", nil))
 	})
 
 	g.NoRoute(func(c *gin.Context) {
-		if utils.ReqFromHTML(c) {
-			c.HTML(http.StatusMovedPermanently, "404.tmpl", nil)
-			return
-		}
-		c.JSON(http.StatusNotFound, utils.JSON(http.StatusNotFound, "页面不存在", nil))
+		panic(utils.JSON(http.StatusNotFound, "", nil))
+	})
+
+	g.Use(func(c *gin.Context) {
+		defer utils.GinRecover(c)
+		c.Next()
 	})
 
 	// 自定义验证器
 	utils.RegValidator()
 
 	// recover panic
-	g.Use(gin.Recovery())
+	//g.Use(gin.Recovery())
 
 	// 挂载静态文件
 	g.Use(static.Serve("/static", static.LocalFile("static", false)))

@@ -9,9 +9,9 @@ import (
 // UserModel 用户
 type UserModel struct {
 	Model
-	Nick     string `json:"nick" gorm:"index;not null;unique"`
-	HeadPic  string `json:"head_pic"`
-	Email    string `json:"email" gorm:"index;"`
+	Nick     string `json:"nick" form:"nick" gorm:"index;not null;unique"`
+	HeadPic  string `json:"head_pic" form:"head_pic"`
+	Email    string `json:"email" form:"email" gorm:"index;"`
 	Password string `json:"password" gorm:"not null"`
 }
 
@@ -54,7 +54,7 @@ func (u *UserModel) Validator() error {
 	if u.Password == "" {
 		return errors.New("请设置您的密码")
 	}
-	tooWeak, err := regexp.MatchString(`^[\S]{6,24}$`, u.Password)
+	tooWeak, err := regexp.MatchString(`^[\S]{6,48}$`, u.Password)
 	if err != nil {
 		return err
 	}
