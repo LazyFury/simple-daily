@@ -36,7 +36,10 @@ func Start(g *gin.RouterGroup) {
 	userRouter := g.Group("/users")
 
 	userRouter.GET("/", middleware.Auth, user.Index)
-	userRouter.POST("/reg", user.Add)
 	userRouter.PUT("/update", middleware.Auth, user.Update)
-	userRouter.POST("/login", user.Login)
+
+	g.POST("/reg", user.Add)
+	g.POST("/login", user.Login)
+	g.GET("/login", user.LoginPgae)
+	g.GET("/logout", user.LogOut)
 }

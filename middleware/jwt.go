@@ -25,17 +25,18 @@ func handleErr(c *gin.Context) {
 // Auth 用户认证中间件
 var Auth gin.HandlerFunc = func(c *gin.Context) {
 	log.Printf("auth middleware")
-	// token, err := getToken(c)
-	// if err != nil || token == "" {
-	// 	handleErr(c)
-	// 	return
-	// }
-	// user, err := parseToken(token)
-	// if err != nil {
-	// 	handleErr(c)
-	// 	return
-	// }
-	// fmt.Print(user)
+	token, err := getToken(c)
+	if err != nil || token == "" {
+		handleErr(c)
+		return
+	}
+	user, err := parseToken(token)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, utils.JSONError("解析token错误", err))
+		return
+	}
+	fmt.Print(user)
+	c.Set("user", user)
 	c.Next()
 }
 
@@ -45,43 +46,54 @@ const (
 )
 
 func getToken(c *gin.Context) (token string, err error) {
+	// query
 	token = c.Query("token")
+	req := c.Request
 	if token != "" {
 		return
 	}
+
+	// post
 	token = c.PostForm("token")
 	if token != "" {
 		return
 	}
 
-	token = c.Request.FormValue("token")
+	token = req.FormValue("token")
 	if token != "" {
 		return
 	}
-	// var _token struct {
-	// 	token string
-	// }
-	// if err = c.Copy().BindJSON(&_token); err != nil {
-	// 	token = _token.token
-	// 	if token != "" {
-	// 		return
-	// 	}
-	// }
-	token = c.Request.Header.Get("token")
+
+	// header
+	token = req.Header.Get("token")
+	if token != "" {
+		return
+	}
+
+	// cookie
+	token, err = c.Cookie("token")
+	if err != nil {
+		return
+	}
+
+	// post json token内不做了，需要拷贝一份body，对性能有一些影响
+
 	return
 }
 
-func createToken(u models.UserModel) (tokenstr string, err error) {
+// CreateToken CreateToken
+func CreateToken(u models.UserModel) (tokenstr string, err error) {
 	//自定义claim
 	claim := jwt.MapClaims{
-		"id":   u.ID,
-		"nick": u.Nick,
-		"nbf":  time.Now().Unix(),            //指定时间之前 token不可用
-		"iat":  time.Now().Unix(),            //签发时间
-		"exp":  time.Now().Unix() + 60*60*24, //过期时间 24小时
+		"id":      u.ID,
+		"nick":    u.Nick,
+		"headPic": u.HeadPic,
+		"nbf":     time.Now().Unix(),            //指定时间之前 token不可用
+		"iat":     time.Now().Unix(),            //签发时间
+		"exp":     time.Now().Unix() + 60*60*24, //过期时间 24小时
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	tokenstr, err = token.SignedString(SECRET)
+	tokenstr, err = token.SignedString([]byte(SECRET))
 	return
 }
 
@@ -110,9 +122,10 @@ func parseToken(tokenss string) (user *models.UserModel, err error) {
 		err = errors.New("token is invalid")
 		return
 	}
-
-	user.ID = claim["id"].(uint) // uint64(claim["id"].(float64))
+	user = &models.UserModel{}
+	user.ID = uint(claim["id"].(float64)) // uint64(claim["id"].(float64))
 	user.Nick = claim["nick"].(string)
+	user.HeadPic = claim["headPic"].(string)
 
 	exp := int64(claim["exp"].(float64))
 	fmt.Println(user, "过期时间=====", time.Unix(exp, 0).Format("2001-01-02 15:04:05"))

@@ -8,3 +8,8 @@
   color: #fff !important;
   font-weight: bold;
 }
+
+#login-form {
+  width: 400px;
+  margin: 100px auto;
+}

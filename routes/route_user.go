@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/Treblex/simple-daily/middleware"
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/utils"
 	"github.com/Treblex/simple-daily/utils/sha"
@@ -26,29 +27,50 @@ func (u *User) Index(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.JSONSuccess("", usersModel.Result))
 }
 
+// LogOut LogOut
+func (u *User) LogOut(c *gin.Context) {
+	c.SetCookie("token", "", -1, "/", "", false, true)
+	c.Redirect(http.StatusMovedPermanently, "/login")
+}
+
+// LoginPgae LoginPgae
+func (u *User) LoginPgae(c *gin.Context) {
+	c.HTML(http.StatusOK, "login/login.tmpl", nil)
+}
+
 // Login 登录
 func (u *User) Login(c *gin.Context) {
 	defer utils.GinRecover(c)
-	nick, ok := c.GetPostForm("nick")
-	if !ok {
+	postUser := struct {
+		Nick     string `json:"nick"`
+		Password string `json:"password"`
+	}{}
+	if err := c.Bind(&postUser); err != nil {
+		panic(err)
+	}
+	if postUser.Nick == "" {
 		panic("请输入用户名")
 	}
-	password, ok := c.GetPostForm("password")
-	if !ok {
+	if postUser.Password == "" {
 		panic("请输入密码")
 	}
 
 	user := &models.UserModel{}
 	if err := models.DB.Where(map[string]interface{}{
-		"nick": nick,
+		"nick": postUser.Nick,
 	}).Or(map[string]interface{}{
-		"email": nick,
+		"email": postUser.Nick,
 	}).First(user).Error; err != nil {
 		panic("用户不存在")
 	}
-	hex := md5.Sum([]byte(sha.EnCode(password)))
+	hex := md5.Sum([]byte(sha.EnCode(postUser.Password)))
 	if user.Password == fmt.Sprintf("%x", hex) {
-		c.JSON(http.StatusOK, utils.JSONSuccess("登陆成功", nil))
+		token, err := middleware.CreateToken(*user)
+		if err != nil {
+			panic(err)
+		}
+		c.SetCookie("token", token, 3600*24, "/", "", false, true)
+		c.JSON(http.StatusOK, utils.JSONSuccess("登陆成功", token))
 		return
 	}
 

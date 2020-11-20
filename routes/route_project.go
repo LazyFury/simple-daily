@@ -27,6 +27,7 @@ func (p *Project) Index(c *gin.Context) {
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
 		"projects":   projects,
 		"pagination": projectModel.Pagination,
+		"user":       c.MustGet("user").(*models.UserModel),
 	})
 }
 
@@ -101,6 +102,7 @@ func (p *Project) Detail(c *gin.Context) {
 		"isToday":       _type == "day",
 		"isWeek":        _type == "week",
 		"isMonth":       _type == "month",
+		"user":          c.MustGet("user").(*models.UserModel),
 	})
 
 }

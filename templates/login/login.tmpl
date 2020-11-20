@@ -1,0 +1,56 @@
+{{template "base_header"}}
+
+<main>
+    <div id="login-form">
+        <form class="layui-form" action="" method="POST">
+            <div class="layui-form-item">
+                <label for="nickname" class="layui-form-label">用户名/邮箱</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nick" id="nickname" required lay-reqtext="用户名是必填项，岂能为空？" placeholder="请输入"
+                        autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label for="password" class="layui-form-label">登陆密码</label>
+                <div class="layui-input-block">
+                    <input type="password" name="password" id="password" required lay-reqtext="用户名是必填项，岂能为空？"
+                        placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="login">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+
+        </form>
+
+        <script>
+            $(document).ready(function () {
+                layui.use('form', function () {
+                    form = layui.form
+                    form.on("submit(login)", function (e) {
+                        console.log(e)
+                        let field = e.field
+                        request("", {
+                            body: JSON.stringify(field), headers: {
+                                'content-type': 'application/json'
+                            }, method: "POST",
+                        }).then(res => {
+                            location.href = "/"
+                        })
+                        return false
+                    })
+                })
+            })
+        </script>
+    </div>
+</main>
+
+{{template "base_footer"}}

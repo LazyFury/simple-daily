@@ -1,4 +1,4 @@
-package utils
+package tools
 
 import (
 	"fmt"
@@ -8,6 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/Treblex/simple-daily/models"
+	"github.com/Treblex/simple-daily/utils"
 )
 
 // TemplateRenderer is a custom html/template renderer for Echo framework
@@ -82,6 +85,18 @@ func allFiles(dir string, suffix string) (arr []*tplFile) {
 	return
 }
 
+// SiteInfo SiteInfo
+type SiteInfo struct {
+	Title string
+	User  *models.UserModel
+}
+
+// SetUser SetUser
+func (s *SiteInfo) SetUser(user *models.UserModel) string {
+	s.User = user
+	return ""
+}
+
 // TemplateFuns TemplateFuns
 var TemplateFuns = template.FuncMap{
 	"msg": func() string { return "hello this is a msg" },
@@ -100,19 +115,20 @@ var TemplateFuns = template.FuncMap{
 	"now": func() time.Time {
 		return time.Now()
 	},
-	"tTime": func(t JSONTime, layout string) string {
+	"tTime": func(t utils.JSONTime, layout string) string {
 		return t.Format(layout)
 	},
 	"admin": func() map[string]interface{} {
 		return map[string]interface{}{
 			"name": "MD webSite",
 		}
-	}, "site": func(title string) map[string]interface{} {
-		return map[string]interface{}{
-			"Title": title,
+	}, "site": func(title string, args ...interface{}) *SiteInfo {
+		return &SiteInfo{
+			Title: title,
+			User:  &models.UserModel{},
 		}
 	},
-	"tFormatDate": func(t JSONTime) string {
+	"tFormatDate": func(t utils.JSONTime) string {
 		return t.Format("2006-01-02")
 	},
 	"thisWeek": func() string {

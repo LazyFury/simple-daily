@@ -14,11 +14,13 @@
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
     crossorigin="anonymous"></script>
+  <script src="/static/script/main.js"></script>
 </head>
+
 
 <body class="layui-layout-body">
   <div class="layui-layout layui-layout-admin">
-    {{template "headerView"}}
+    {{template "headerView" .}}
     <div class="layui-body1" style="padding:32px;height:calc(100vh - 120px);overflow-y: auto;">
       <div style="min-height: 500px;">
         {{ end }}

@@ -1,4 +1,6 @@
-{{template "header"  site "项目管理"}}
+{{$site := site "项目管理"}}
+{{$site.SetUser .user}}
+{{template "header"  $site}}
 <main>
   <div class="container-fluid">
     <h1>项目管理</h1>

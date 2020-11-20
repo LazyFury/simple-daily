@@ -6,6 +6,7 @@ import (
 
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/routes"
+	"github.com/Treblex/simple-daily/tools"
 	"github.com/Treblex/simple-daily/utils"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
@@ -38,12 +39,12 @@ func main() {
 	g.Use(static.Serve("/static", static.LocalFile("static", false)))
 
 	// 链接数据库
-	if err := models.Connect(`root:sukeaiya@tcp(mysql:3306)/daily?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai`); err != nil {
+	if err := models.Connect(`root:sukeaiya@tcp(localhost:1232)/daily?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai`); err != nil {
 		panic(err)
 	}
 
 	// html模版
-	_template := template.Must(utils.ParseGlob(template.New("base").Funcs(utils.TemplateFuns), "templates", "*.tmpl"))
+	_template := template.Must(tools.ParseGlob(template.New("base").Funcs(tools.TemplateFuns), "templates", "*.tmpl"))
 	g.SetHTMLTemplate(_template)
 
 	// 注册路由
