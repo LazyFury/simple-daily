@@ -23,7 +23,7 @@ func (p *Project) Index(c *gin.Context) {
 		return db.Order("updated_at desc,id desc")
 	}
 	projectModel := models.GetObjectsOrEmpty(projects, nil, midd)
-	projectModel.Paging(page, size)
+	_ = projectModel.Paging(page, size)
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
 		"projects":   projects,
 		"pagination": projectModel.Pagination,
@@ -85,8 +85,8 @@ func (p *Project) Detail(c *gin.Context) {
 		panic(err)
 	}
 
-	jobs := []string{} //聚合工作内容
-	plusProgress := 0  //增加的进度
+	var jobs []string //聚合工作内容
+	plusProgress := 0 //增加的进度
 	project.Logs = *logs
 
 	for _, item := range *logs {

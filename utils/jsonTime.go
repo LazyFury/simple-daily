@@ -9,11 +9,6 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-var (
-	// DefaultTimeLayout DefaultTimeLayout
-	DefaultTimeLayout string = "2006年01月02日 15:04:05"
-)
-
 type (
 	// JSONTime JSONTime
 	JSONTime struct {

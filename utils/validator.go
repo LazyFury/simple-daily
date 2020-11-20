@@ -20,6 +20,6 @@ var requiredParams validator.Func = func(fl validator.FieldLevel) bool {
 func RegValidator() {
 	v, ok := binding.Validator.Engine().(*validator.Validate)
 	if ok {
-		v.RegisterValidation("requiredParams", requiredParams)
+		_ = v.RegisterValidation("requiredParams", requiredParams)
 	}
 }

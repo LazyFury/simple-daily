@@ -44,11 +44,14 @@ func main() {
 	}
 
 	// html模版
-	_template := template.Must(tools.ParseGlob(template.New("base").Funcs(tools.TemplateFuns), "templates", "*.tmpl"))
+	_template := template.Must(tools.ParseGlob(template.New("base").Funcs(tools.TemplateFuncs), "templates", "*.tmpl"))
 	g.SetHTMLTemplate(_template)
 
 	// 注册路由
 	routes.Start(g.Group(""))
 
-	g.Run()
+	err := g.Run()
+	if err != nil {
+		panic(err)
+	}
 }

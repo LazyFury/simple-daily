@@ -122,10 +122,10 @@ func GetObjectsOrEmpty(obj interface{}, query interface{}, args ...interface{}) 
 }
 
 // GetParamsTryInt 字符串转数字
-func GetParamsTryInt(val string, defaul int) int {
+func GetParamsTryInt(val string, defaults int) int {
 	num, err := strconv.Atoi(val)
 	if err != nil {
-		num = defaul
+		num = defaults
 	}
 	return num
 }

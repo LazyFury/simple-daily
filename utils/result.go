@@ -26,8 +26,8 @@ const (
 	LoginSuccess ErrCode = iota + 100
 )
 const (
-	// AuthenError 认证失败
-	AuthenError ErrCode = -iota - 100
+	// AuthedError 认证失败
+	AuthedError ErrCode = -iota - 100
 	// NotFound 没有数据
 	NotFound
 )
@@ -37,7 +37,7 @@ var ErrorCodeText = map[ErrCode]string{
 	Success:      "获取成功",
 	Errors:       "遇到错误",
 	LoginSuccess: "登陆成功",
-	AuthenError:  "登陆超时",
+	AuthedError:  "登陆超时",
 	NotFound:     "没有数据",
 }
 
@@ -66,7 +66,7 @@ func JSON(code ErrCode, message string, data interface{}) Result {
 	}
 }
 
-// JSONSuccess JSONSUCCESS
+// JSONSuccess 成功
 func JSONSuccess(message string, data interface{}) Result {
 	return JSON(Success, message, data)
 }

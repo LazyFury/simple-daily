@@ -97,8 +97,8 @@ func (s *SiteInfo) SetUser(user *models.UserModel) string {
 	return ""
 }
 
-// TemplateFuns TemplateFuns
-var TemplateFuns = template.FuncMap{
+// TemplateFuncs 模板方法
+var TemplateFuncs = template.FuncMap{
 	"msg": func() string { return "hello this is a msg" },
 	"strDefault": func(str string, def string) string {
 		if str != "" {

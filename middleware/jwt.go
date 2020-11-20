@@ -18,7 +18,7 @@ func handleErr(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/login")
 		return
 	}
-	c.AbortWithStatusJSON(http.StatusForbidden, utils.JSON(utils.AuthenError, "", nil))
+	c.AbortWithStatusJSON(http.StatusForbidden, utils.JSON(utils.AuthedError, "", nil))
 	return
 }
 
@@ -80,8 +80,8 @@ func getToken(c *gin.Context) (token string, err error) {
 	return
 }
 
-// CreateToken CreateToken
-func CreateToken(u models.UserModel) (tokenstr string, err error) {
+// CreateToken 创建token
+func CreateToken(u models.UserModel) (tokens string, err error) {
 	//自定义claim
 	claim := jwt.MapClaims{
 		"id":      u.ID,
@@ -92,7 +92,7 @@ func CreateToken(u models.UserModel) (tokenstr string, err error) {
 		"exp":     time.Now().Unix() + 60*60*24, //过期时间 24小时
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	tokenstr, err = token.SignedString([]byte(SECRET))
+	tokens, err = token.SignedString([]byte(SECRET))
 	return
 }
 
@@ -105,15 +105,15 @@ func secret() jwt.Keyfunc {
 }
 
 //ParseToken 解密token
-func parseToken(tokenss string) (user *models.UserModel, err error) {
-	token, err := jwt.Parse(tokenss, secret())
+func parseToken(tokens string) (user *models.UserModel, err error) {
+	token, err := jwt.Parse(tokens, secret())
 	if err != nil {
 		err = errors.New("解析token出错")
 		return
 	}
 	claim, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		err = errors.New("cannot convert claim to mapclaim")
+		err = errors.New("cannot convert claim to map claim")
 		return
 	}
 	//验证token，如果token被修改过则为false
