@@ -23,26 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9525e11-427a-41cd-a3de-53b514152a4d" name="Default Changelist" comment="typo">
-      <change afterPath="$PROJECT_DIR$/templates/user/profile.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/model_project.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_project.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/model_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/var_base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/var_base.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/route_project.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_project.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/route_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/404.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/404.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/header.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/header.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/project/update.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/project/update.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/recover.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/recover.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/result.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/result.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/config.go" beforeDir="false" afterPath="$PROJECT_DIR$/config/config.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/upload/demo_aliyun_oss.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/demo_aliyun_oss.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" path="/usr/local/go" />
+  <component name="GOROOT" path="$USER_HOME$/sdk/go1.15.5" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -79,7 +70,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="configurable.group.editor" />
+    <property name="settings.editor.selected.configurable" value="go.sdk" />
   </component>
   <component name="RunManager">
     <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
@@ -153,30 +144,34 @@
       <screen x="54" y="25" width="1482" height="935" />
     </state>
     <state x="633" y="106" key="EnvironmentVariablesDialog/54.25.1482.935@54.25.1482.935" timestamp="1605846909083" />
-    <state width="1211" height="119" key="GridCell.Tab.0.bottom" timestamp="1605850945961">
-      <screen x="54" y="25" width="1482" height="935" />
+    <state width="1211" height="119" key="GridCell.Tab.0.bottom" timestamp="1605862096807">
+      <screen x="52" y="25" width="1484" height="935" />
     </state>
+    <state width="1211" height="119" key="GridCell.Tab.0.bottom/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
     <state width="1211" height="119" key="GridCell.Tab.0.bottom/54.25.1482.935@54.25.1482.935" timestamp="1605850945961" />
-    <state width="1211" height="119" key="GridCell.Tab.0.center" timestamp="1605850945960">
-      <screen x="54" y="25" width="1482" height="935" />
+    <state width="1211" height="119" key="GridCell.Tab.0.center" timestamp="1605862096807">
+      <screen x="52" y="25" width="1484" height="935" />
     </state>
+    <state width="1211" height="119" key="GridCell.Tab.0.center/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
     <state width="1211" height="119" key="GridCell.Tab.0.center/54.25.1482.935@54.25.1482.935" timestamp="1605850945960" />
-    <state width="1211" height="119" key="GridCell.Tab.0.left" timestamp="1605850945960">
-      <screen x="54" y="25" width="1482" height="935" />
+    <state width="1211" height="119" key="GridCell.Tab.0.left" timestamp="1605862096806">
+      <screen x="52" y="25" width="1484" height="935" />
     </state>
+    <state width="1211" height="119" key="GridCell.Tab.0.left/52.25.1484.935@52.25.1484.935" timestamp="1605862096806" />
     <state width="1211" height="119" key="GridCell.Tab.0.left/54.25.1482.935@54.25.1482.935" timestamp="1605850945960" />
-    <state width="1211" height="119" key="GridCell.Tab.0.right" timestamp="1605850945961">
-      <screen x="54" y="25" width="1482" height="935" />
+    <state width="1211" height="119" key="GridCell.Tab.0.right" timestamp="1605862096807">
+      <screen x="52" y="25" width="1484" height="935" />
     </state>
+    <state width="1211" height="119" key="GridCell.Tab.0.right/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
     <state width="1211" height="119" key="GridCell.Tab.0.right/54.25.1482.935@54.25.1482.935" timestamp="1605850945961" />
     <state width="229" height="539" key="HiddenNamespacesPopup" timestamp="1605847767506">
       <screen x="54" y="25" width="1482" height="935" />
     </state>
     <state width="229" height="539" key="HiddenNamespacesPopup/54.25.1482.935@54.25.1482.935" timestamp="1605847767506" />
-    <state x="229" y="59" key="SettingsEditor" timestamp="1605848868819">
-      <screen x="54" y="25" width="1482" height="935" />
+    <state x="229" y="59" key="SettingsEditor" timestamp="1605862651754">
+      <screen x="52" y="25" width="1484" height="935" />
     </state>
-    <state x="229" y="59" key="SettingsEditor/52.25.1484.935@52.25.1484.935" timestamp="1605845962780" />
+    <state x="229" y="59" key="SettingsEditor/52.25.1484.935@52.25.1484.935" timestamp="1605862651754" />
     <state x="229" y="59" key="SettingsEditor/54.25.1482.935@54.25.1482.935" timestamp="1605848868819" />
     <state x="378" y="177" key="Vcs.Push.Dialog.v2" timestamp="1605849126387">
       <screen x="54" y="25" width="1482" height="935" />

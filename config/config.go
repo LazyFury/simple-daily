@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-
-	"github.com/Treblex/simple-daily/tools/upload"
 )
 
 // Global 全局配置
@@ -21,9 +19,9 @@ func initConfig() *configType {
 }
 
 type configType struct {
-	BaseURL string            `json:"base_url"` // 网站根目录
-	Port    int               `json:"port"`     //端口
-	AliOss  upload.AliOssConf `json:"ali_oss"`  //阿里云oss
+	BaseURL string `json:"base_url"` // 网站根目录
+	Port    int    `json:"port"`     //端口
+	// AliOss  upload.AliOssConf `json:"ali_oss"`  //阿里云oss
 }
 
 // ReadConfig 读取配置 初始化时运行 绑定为全局变量
