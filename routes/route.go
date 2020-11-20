@@ -40,6 +40,6 @@ func Start(g *gin.RouterGroup) {
 
 	g.POST("/reg", user.Add)
 	g.POST("/login", user.Login)
-	g.GET("/login", user.LoginPgae)
+	g.GET("/login", user.LoginPage)
 	g.GET("/logout", user.LogOut)
 }

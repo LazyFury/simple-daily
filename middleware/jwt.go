@@ -35,7 +35,6 @@ var Auth gin.HandlerFunc = func(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, utils.JSONError("解析token错误", err))
 		return
 	}
-	fmt.Print(user)
 	c.Set("user", user)
 	c.Next()
 }
@@ -128,6 +127,6 @@ func parseToken(tokenss string) (user *models.UserModel, err error) {
 	user.HeadPic = claim["headPic"].(string)
 
 	exp := int64(claim["exp"].(float64))
-	fmt.Println(user, "过期时间=====", time.Unix(exp, 0).Format("2001-01-02 15:04:05"))
+	fmt.Println(user.Nick, "过期时间=====", time.Unix(exp, 0).Format("2001-01-02 15:04:05"))
 	return
 }

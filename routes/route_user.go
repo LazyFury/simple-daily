@@ -27,14 +27,14 @@ func (u *User) Index(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.JSONSuccess("", usersModel.Result))
 }
 
-// LogOut LogOut
+// LogOut 用户登出
 func (u *User) LogOut(c *gin.Context) {
 	c.SetCookie("token", "", -1, "/", "", false, true)
 	c.Redirect(http.StatusMovedPermanently, "/login")
 }
 
-// LoginPgae LoginPgae
-func (u *User) LoginPgae(c *gin.Context) {
+// LoginPage 登录页面
+func (u *User) LoginPage(c *gin.Context) {
 	c.HTML(http.StatusOK, "login/login.tmpl", nil)
 }
 
@@ -63,6 +63,7 @@ func (u *User) Login(c *gin.Context) {
 	}).First(user).Error; err != nil {
 		panic("用户不存在")
 	}
+
 	hex := md5.Sum([]byte(sha.EnCode(postUser.Password)))
 	if user.Password == fmt.Sprintf("%x", hex) {
 		token, err := middleware.CreateToken(*user)
