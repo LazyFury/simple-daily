@@ -13,12 +13,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func handleErr(c *gin.Context) {
+func handleErr(c *gin.Context, err string) {
 	if utils.ReqFromHTML(c) {
 		c.Redirect(http.StatusMovedPermanently, "/login")
 		return
 	}
-	c.AbortWithStatusJSON(http.StatusForbidden, utils.JSON(utils.AuthedError, "", nil))
+	c.AbortWithStatusJSON(http.StatusForbidden, utils.JSON(utils.AuthedError, err, nil))
 	return
 }
 
@@ -27,11 +27,13 @@ var Auth gin.HandlerFunc = func(c *gin.Context) {
 	log.Printf("auth middleware")
 	token, err := getToken(c)
 	if err != nil || token == "" {
-		panic(utils.JSON(utils.AuthedError, "", nil))
+		handleErr(c, "")
+		return
 	}
 	user, err := parseToken(token)
 	if err != nil {
-		panic(utils.JSON(utils.AuthedError, "解析token错误", err))
+		handleErr(c, "解析token错误")
+		return
 	}
 	c.Set("user", user)
 }

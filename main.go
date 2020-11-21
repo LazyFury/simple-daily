@@ -59,6 +59,9 @@ func main() {
 
 	// 注册路由
 	routes.Start(g.Group(""))
+	g.GET("/favicon.ico", func(c *gin.Context) {
+		c.File("static/favicon.ico")
+	})
 
 	err := g.Run(fmt.Sprintf(":%d", config.Global.Port))
 	if err != nil {

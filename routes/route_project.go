@@ -20,25 +20,29 @@ type Project struct{}
 func (p *Project) Index(c *gin.Context) {
 	page, size := models.GetPagingParams(c)
 	user := c.MustGet("user").(*models.UserModel)
-	type proejctsType struct {
-		*models.ProjectModel
-		Favorited bool
-	}
-	projects := &[]proejctsType{}
+	type (
+		projectsType struct {
+			*models.ProjectModel
+			Favorited bool
+		}
+	)
+	projects := &[]projectsType{}
 
-	favoriet := &models.FavoriteProjectModel{} //收藏的项目
+	favorite := &models.FavoriteProjectModel{} //收藏的项目
 	project := &models.ProjectModel{}          //项目
 	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
-		return db.Table(project.TableName()).Select([]string{"id"}).Where(map[string]interface{}{
+		return db.Table(project.TableName()).Where(map[string]interface{}{
 			"user_id": user.ID,
 		}).Order("favorited desc,updated_at desc,id desc").Joins(fmt.Sprintf(
 			"left join (select true favorited,project_id,user_id f_user_id from `%s` where `deleted_at` IS NULL) f on f.`project_id`=`%s`.`id` and f.`f_user_id`=`%s`.`user_id`",
-			favoriet.TableName(),
+			favorite.TableName(),
 			project.TableName(), project.TableName(),
 		))
 	})
 
-	if err := projectModel.Paging(page, size); err != nil {
+	if err := projectModel.Paging(page, size, func(db *gorm.DB) *gorm.DB {
+		return db.Select([]string{"*"})
+	}); err != nil {
 		panic(err)
 	}
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
@@ -62,11 +66,11 @@ func (p *Project) Detail(c *gin.Context) {
 	// 初始化模型
 	project := &models.ProjectModel{}
 	// 查询详情
-	if err := models.DB.Where(map[string]interface{}{
+	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
-	}).First(project).Error; err != nil {
-		panic(utils.JSON(utils.NotFound, "", nil))
+	}); err != nil {
+		panic(utils.JSON(utils.NotFound, "", err))
 	}
 
 	// 查询日志
@@ -137,15 +141,16 @@ func (p *Project) UpdatePage(c *gin.Context) {
 	user := c.MustGet("user").(*models.UserModel)
 
 	project := &models.ProjectModel{}
-	if err := models.DB.Where(map[string]interface{}{
+	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
-	}).First(project).Error; err != nil {
+	}); err != nil {
 		panic(utils.JSON(utils.NotFound, "", nil))
 	}
 
 	c.HTML(http.StatusOK, "project/update.tmpl", map[string]interface{}{
 		"project": project,
+		"csrf":    c.MustGet("csrf").(string),
 	})
 }
 
@@ -179,17 +184,16 @@ func (p *Project) Update(c *gin.Context) {
 
 	user := c.MustGet("user").(*models.UserModel)
 
-	db := models.DB
 	project := &models.ProjectModel{}
 
-	if err := db.Where(map[string]interface{}{
+	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
-	}).First(project).Error; err != nil {
+	}); err != nil {
 		panic(utils.JSON(utils.NotFound, "", err))
 	}
 
-	if err := c.ShouldBindJSON(project); err != nil {
+	if err := c.ShouldBind(project); err != nil {
 		panic(utils.JSONError("绑定参数失败", err.Error()))
 	}
 
@@ -199,7 +203,7 @@ func (p *Project) Update(c *gin.Context) {
 
 	project.UserID = user.ID
 
-	row := db.Save(project)
+	row := models.DB.Save(project)
 	if row.Error != nil {
 		panic(row.Error)
 	}

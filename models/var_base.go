@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	"math"
 	"strconv"
@@ -10,18 +11,18 @@ import (
 	"gorm.io/gorm"
 )
 
-// Model Model
-type Model struct {
-	ID        uint           `json:"id" gorm:"primarykey"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-}
-
-// Middleware 查询中间操作
-type Middleware func(db *gorm.DB) *gorm.DB
-
 type (
+	// Middleware 查询中间操作
+	Middleware func(db *gorm.DB) *gorm.DB
+
+	// Model Model
+	Model struct {
+		ID        uint           `json:"id" gorm:"primarykey"`
+		CreatedAt time.Time      `json:"created_at"`
+		UpdatedAt time.Time      `json:"updated_at"`
+		DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	}
+
 	// Objects List
 	Objects struct {
 		Obj        interface{}
@@ -82,11 +83,17 @@ func (o *Objects) All() (err error) {
 }
 
 // Paging 分页数据
-func (o *Objects) Paging(page int, size int) (err error) {
+func (o *Objects) Paging(page int, size int, args ...Middleware) (err error) {
 	offset := size * (page - 1)
 	var count int64
-	row := o.Model
-	row = row.Count(&count).Offset(offset).Limit(size).Find(o.Obj)
+	row := o.Model.Count(&count)
+
+	//中间操作，count之后会丢失select，暂不清楚是否有其他异常
+	for _, midd := range args {
+		row = midd(row)
+	}
+
+	row.Offset(offset).Limit(size).Find(o.Obj)
 	if row.Error != nil {
 		err = row.Error
 	}
@@ -99,6 +106,22 @@ func (o *Objects) Paging(page int, size int) (err error) {
 		List:       o.Obj,
 		Pagination: *o.Pagination,
 	}
+	return
+}
+
+//GetObjectOrNotFound 获取某一条数据
+//gorm  first查询接收空条件，在某些情况下会操作到错误到数据
+func GetObjectOrNotFound(obj interface{}, query interface{}, midd ...Middleware) (err error) {
+	row := DB.Model(obj)
+	if query != nil {
+		row = row.Where(query)
+	} else {
+		return errors.New("query 不可为nil")
+	}
+	for _, mid := range midd {
+		row = mid(row)
+	}
+	err = row.First(obj).Error
 	return
 }
 

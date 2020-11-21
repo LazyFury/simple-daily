@@ -6,6 +6,7 @@ import (
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/utils"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 // ProjectLog 项目日志
@@ -19,11 +20,11 @@ func (p *ProjectLog) Detail(c *gin.Context) {
 	}
 
 	log := &models.ProjectLogModel{}
-	row := models.DB.Where(map[string]interface{}{
+	err := models.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": id,
-	}).First(log)
-	if row.Error != nil {
-		panic(utils.JSON(utils.NotFound, "", row.Error))
+	})
+	if err != nil {
+		panic(utils.JSON(utils.NotFound, "", err))
 	}
 
 	c.JSON(http.StatusOK, utils.JSONSuccess("", log))
@@ -46,9 +47,9 @@ func (p *ProjectLog) UpdatePage(c *gin.Context) {
 	}
 
 	log := &models.ProjectLogModel{}
-	if err := models.DB.Where(map[string]interface{}{
+	if err := models.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": lid,
-	}).First(log).Error; err != nil {
+	}); err != nil {
 		panic(err)
 	}
 	c.HTML(http.StatusOK, "project/log/update.tmpl", map[string]interface{}{
@@ -67,16 +68,27 @@ func (p *ProjectLog) Add(c *gin.Context) {
 		panic(err)
 	}
 
-	if err := models.DB.Create(log).Error; err != nil {
-		panic(utils.JSONError("保存失败", err))
-	}
+	// gorm 事务操作
+	if err := models.DB.Transaction(func(tx *gorm.DB) error {
+		// 保存日志
+		if err := tx.Create(log).Error; err != nil {
+			return err
+		}
 
-	project := &models.ProjectModel{Model: models.Model{ID: log.ProjectID}}
-	if models.DB.Find(project).RowsAffected == 0 {
-		panic("没有找到对应的项目")
-	}
-	project.Progress += log.PlusProgress
-	if err := models.DB.Save(project).Error; err != nil {
+		// 查找项目
+		project := &models.ProjectModel{Model: models.Model{ID: log.ProjectID}}
+		if err := tx.Where(project).First(project).Error; err != nil {
+			return err
+		}
+
+		// 更新项目
+		project.Progress += log.PlusProgress
+		if err := tx.Save(project).Error; err != nil {
+			return err
+		}
+
+		return nil
+	}); err != nil {
 		panic(err)
 	}
 
@@ -93,9 +105,9 @@ func (p *ProjectLog) Update(c *gin.Context) {
 	log := &models.ProjectLogModel{}
 	project := &models.ProjectModel{}
 	// 查找日志
-	if err := models.DB.Where(map[string]interface{}{
+	if err := models.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": lid,
-	}).First(log).Error; err != nil {
+	}); err != nil {
 		panic(err)
 	}
 

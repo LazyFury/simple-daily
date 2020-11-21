@@ -11,7 +11,7 @@ var _ ModelType = &FavoriteProjectModel{}
 
 // TableName 表名
 func (f *FavoriteProjectModel) TableName() string {
-	return "favorite_project_models"
+	return "project_favorite_models"
 }
 
 // Validator Validator

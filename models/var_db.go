@@ -12,7 +12,8 @@ var DB *gorm.DB
 // Connect 链接数据库
 func Connect(dsn string) (err error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
+		Logger:                 logger.Default.LogMode(logger.Info),
+		SkipDefaultTransaction: true,
 	})
 	if err != nil {
 		return

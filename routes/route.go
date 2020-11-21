@@ -12,8 +12,9 @@ var (
 )
 
 // Start 注册路由
-func Start(g *gin.RouterGroup) {
+func Start(r *gin.RouterGroup) {
 	// api := g.Group("/api")
+	g := r.Group("", csrf)
 	auth := g.Group("", middleware.Auth)
 	// 项目
 	var p = Project{}

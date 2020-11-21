@@ -12,10 +12,26 @@ function request(url, config) {
       }
     })
     .then((res) => {
-      layui.layer.msg(res.message || "success");
-      return res;
+      if (res.code == 1) {
+        layui.layer.msg(res.message || "success");
+        return res;
+      }
+      throw res;
     })
     .catch((err) => {
-      layer.layer.msg(res.message || "请求错误");
+      layui.layer.msg(err.message || "请求错误");
+      throw err;
     });
+}
+
+function reload() {
+  setTimeout(() => {
+    location.reload();
+  }, 1000);
+}
+
+function parentReload() {
+  setTimeout(() => {
+    window.parent.location.reload();
+  }, 1000);
 }

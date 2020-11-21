@@ -27,3 +27,15 @@ type ProjectTodoModel struct {
 	DoneTime  gorm.DeletedAt `json:"done_time"`
 	Done      bool           `json:"done" gorm:"-"`
 }
+
+var _ ModelType = &ProjectTodoModel{}
+
+// TableName 表名
+func (p *ProjectTodoModel) TableName() string {
+	return "project_todo_models"
+}
+
+// Validator 验证器
+func (p *ProjectTodoModel) Validator() (err error) {
+	return
+}

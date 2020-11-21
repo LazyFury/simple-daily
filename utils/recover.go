@@ -14,7 +14,6 @@ func GinRecover(c *gin.Context) {
 		result := JSON(http.StatusInternalServerError, "", nil)
 		//普通错误
 		if err, ok := r.(error); ok {
-			log.Fatal(err)
 			result.Message = err.Error()
 			result.Data = err
 		}
@@ -46,7 +45,7 @@ func GinRecover(c *gin.Context) {
 
 		log.Printf("\n\n\x1b[31m[Custom Debug Result]: URL:%s ;\nErr: %v \x1b[0m\n\n", c.Request.URL.RequestURI(), result)
 
-		// panic("打断response继续写入内容")
+		// "打断response继续写入内容"
 		c.AbortWithStatus(http.StatusInternalServerError)
 
 	}

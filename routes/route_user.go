@@ -90,39 +90,35 @@ func (u *User) ForgotPage(c *gin.Context) {
 func (u *User) Forgot(c *gin.Context) {
 	form := struct {
 		Email string `form:"email" binding:"required"`
-		Csrf  string `form:"csrf" binding:"required"`
 	}{}
 
 	if err := c.ShouldBind(&form); err != nil {
 		panic(err)
 	}
 
-	csrf, ok := getCsrfKey(c)
-	if ok && csrf == form.Csrf {
-		if strings.Trim(form.Email, " ") == "" {
-			panic("请输入用户邮箱")
-		}
-		user := &models.UserModel{Email: form.Email}
-		if err := models.DB.Where(user).First(user).Error; err != nil {
-			panic("用户不存在")
-		}
-
-		token, err := middleware.CreateTokenMaxAge(*user, int64(60*5)) //临时token 5分钟 重置密码成功之后删除重新登录
-		if err != nil {
-			panic(err)
-		}
-
-		if err := config.Global.Mail.SendMail(
-			"重置密码", []string{form.Email},
-			fmt.Sprintf("重置密码链接: <a href='http://%s/users/reset-password?token=%s'>reset password</a>", c.Request.Host, token),
-		); err != nil {
-			panic(err)
-		}
-		c.JSON(http.StatusOK, utils.JSONSuccess("邮件发送成功！", nil))
-		return
+	if strings.Trim(form.Email, " ") == "" {
+		panic("请输入用户邮箱")
+	}
+	// 查找用户
+	user := &models.UserModel{Email: form.Email}
+	if err := models.GetObjectOrNotFound(user, user); err != nil {
+		panic("用户不存在")
 	}
 
-	c.JSON(http.StatusOK, utils.JSONError("验证失败", nil))
+	// 创建临时token
+	token, err := middleware.CreateTokenMaxAge(*user, int64(60*5)) //临时token 5分钟 重置密码成功之后删除重新登录
+	if err != nil {
+		panic(err)
+	}
+
+	// 发送重置密码邮件
+	if err := config.Global.Mail.SendMail(
+		"重置密码", []string{user.Email},
+		fmt.Sprintf("重置密码链接: <a href='http://%s/users/reset-password?token=%s'>reset password</a>", c.Request.Host, token),
+	); err != nil {
+		panic(err)
+	}
+	c.JSON(http.StatusOK, utils.JSONSuccess("邮件发送成功！", nil))
 }
 
 // LogOut 用户登出
