@@ -22,6 +22,11 @@ func (p *ProjectLogModel) IsToday() bool {
 	return p.CreatedAt.After(today)
 }
 
+// TableName 表名
+func (p *ProjectLogModel) TableName() string {
+	return "project_log_models"
+}
+
 // Validator 验证
 func (p *ProjectLogModel) Validator() (err error) {
 

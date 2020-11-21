@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -20,12 +21,22 @@ func (p *Project) Index(c *gin.Context) {
 	defer utils.GinRecover(c)
 	page, size := models.GetPagingParams(c)
 	user := c.MustGet("user").(*models.UserModel)
+	type proejctsType struct {
+		*models.ProjectModel
+		FavoriteID uint
+	}
+	projects := &[]proejctsType{}
 
-	projects := &[]models.ProjectModel{}
+	favoriet := &models.FavoriteProjectModel{} //收藏的项目
+	project := &models.ProjectModel{}          //项目
 	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
-		return db.Where(map[string]interface{}{
+		return db.Table(project.TableName()).Select([]string{"id"}).Where(map[string]interface{}{
 			"user_id": user.ID,
-		}).Order("updated_at desc,id desc")
+		}).Order("updated_at desc,id desc").Joins(fmt.Sprintf(
+			"left join (select id favorite_id,project_id,user_id f_user_id from `%s` where `deleted_at` IS NULL) f on f.`project_id`=`%s`.`id` and f.`f_user_id`=`%s`.`user_id`",
+			favoriet.TableName(),
+			project.TableName(), project.TableName(),
+		))
 	})
 
 	if err := projectModel.Paging(page, size); err != nil {

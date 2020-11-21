@@ -85,7 +85,8 @@ func (o *Objects) All() (err error) {
 func (o *Objects) Paging(page int, size int) (err error) {
 	offset := size * (page - 1)
 	var count int64
-	row := o.Model.Count(&count).Offset(offset).Limit(size).Find(o.Obj)
+	row := o.Model
+	row = row.Count(&count).Offset(offset).Limit(size).Find(o.Obj)
 	if row.Error != nil {
 		err = row.Error
 	}

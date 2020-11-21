@@ -27,6 +27,11 @@ func (p *ProjectModel) TestVal() string {
 	return "hello"
 }
 
+// TableName 表名
+func (p *ProjectModel) TableName() string {
+	return "project_models"
+}
+
 // Validator 验证
 func (p *ProjectModel) Validator() (err error) {
 	p.Name = strings.Trim(p.Name, " ")

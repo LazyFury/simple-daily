@@ -16,6 +16,7 @@
         <tr>
           <th>#</th>
           <th>项目名称</th>
+          <th>星标</th>
           <th>项目介绍</th>
           <th>项目进度</th>
           <th>开始时间</th>
@@ -32,6 +33,9 @@
         <tr>
           <td>{{.ID}}</td>
           <td><b>{{strDefault .Name "-"}}</b></td>
+          <td>{{.FavoriteID}}
+            <a href="javascript:favorite({{.ID}})">收藏</a>
+          </td>
           <td>{{strDefault .Describe "~"}}</td>
           <td>
 
@@ -76,6 +80,10 @@
           })
 
         })
+      }
+
+      function favorite(pid) {
+        fetch("/projects/favorite/" + pid, { method: "POST" })
       }
 
       function open(url) {

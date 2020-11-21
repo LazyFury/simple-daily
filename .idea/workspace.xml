@@ -23,16 +23,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9525e11-427a-41cd-a3de-53b514152a4d" name="Default Changelist" comment="typo">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9dcf3f77-d7ed-4c31-a079-faa761f8ca29.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9dcf3f77-d7ed-4c31-a079-faa761f8ca29.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_project.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_project.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_project_log.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_project_log.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/model_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/model_user.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/var_base.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/var_base.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/var_db.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/var_db.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/var_interface.go" beforeDir="false" afterPath="$PROJECT_DIR$/models/var_interface.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/route.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/route_project.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_project.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/route_user.go" beforeDir="false" afterPath="$PROJECT_DIR$/routes/route_user.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/script/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/static/script/main.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/header.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/header.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/project/add.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/project/add.tmpl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/project/index.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/project/index.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/user/profile.tmpl" beforeDir="false" afterPath="$PROJECT_DIR$/templates/user/profile.tmpl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/upload/demo_default.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/demo_default.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/upload/upload.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/upload/upload.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/recover.go" beforeDir="false" afterPath="$PROJECT_DIR$/utils/recover.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,25 +151,25 @@
       <screen x="54" y="25" width="1482" height="935" />
     </state>
     <state x="633" y="106" key="EnvironmentVariablesDialog/54.25.1482.935@54.25.1482.935" timestamp="1605846909083" />
-    <state width="1211" height="119" key="GridCell.Tab.0.bottom" timestamp="1605862096807">
+    <state width="827" height="335" key="GridCell.Tab.0.bottom" timestamp="1605875343656">
       <screen x="52" y="25" width="1484" height="935" />
     </state>
-    <state width="1211" height="119" key="GridCell.Tab.0.bottom/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
+    <state width="827" height="335" key="GridCell.Tab.0.bottom/52.25.1484.935@52.25.1484.935" timestamp="1605875343656" />
     <state width="1211" height="119" key="GridCell.Tab.0.bottom/54.25.1482.935@54.25.1482.935" timestamp="1605850945961" />
-    <state width="1211" height="119" key="GridCell.Tab.0.center" timestamp="1605862096807">
+    <state width="827" height="335" key="GridCell.Tab.0.center" timestamp="1605875343655">
       <screen x="52" y="25" width="1484" height="935" />
     </state>
-    <state width="1211" height="119" key="GridCell.Tab.0.center/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
+    <state width="827" height="335" key="GridCell.Tab.0.center/52.25.1484.935@52.25.1484.935" timestamp="1605875343655" />
     <state width="1211" height="119" key="GridCell.Tab.0.center/54.25.1482.935@54.25.1482.935" timestamp="1605850945960" />
-    <state width="1211" height="119" key="GridCell.Tab.0.left" timestamp="1605862096806">
+    <state width="827" height="335" key="GridCell.Tab.0.left" timestamp="1605875343655">
       <screen x="52" y="25" width="1484" height="935" />
     </state>
-    <state width="1211" height="119" key="GridCell.Tab.0.left/52.25.1484.935@52.25.1484.935" timestamp="1605862096806" />
+    <state width="827" height="335" key="GridCell.Tab.0.left/52.25.1484.935@52.25.1484.935" timestamp="1605875343655" />
     <state width="1211" height="119" key="GridCell.Tab.0.left/54.25.1482.935@54.25.1482.935" timestamp="1605850945960" />
-    <state width="1211" height="119" key="GridCell.Tab.0.right" timestamp="1605862096807">
+    <state width="827" height="335" key="GridCell.Tab.0.right" timestamp="1605875343655">
       <screen x="52" y="25" width="1484" height="935" />
     </state>
-    <state width="1211" height="119" key="GridCell.Tab.0.right/52.25.1484.935@52.25.1484.935" timestamp="1605862096807" />
+    <state width="827" height="335" key="GridCell.Tab.0.right/52.25.1484.935@52.25.1484.935" timestamp="1605875343655" />
     <state width="1211" height="119" key="GridCell.Tab.0.right/54.25.1482.935@54.25.1482.935" timestamp="1605850945961" />
     <state width="229" height="539" key="HiddenNamespacesPopup" timestamp="1605847767506">
       <screen x="54" y="25" width="1482" height="935" />

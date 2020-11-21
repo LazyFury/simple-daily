@@ -28,6 +28,9 @@ func Start(g *gin.RouterGroup) {
 	project.PUT("/update/:id", p.Update)
 	project.DELETE("/del/:id", p.Delete)
 
+	favorite := FavoriteProject{}
+	project.POST("/favorite/:id", favorite.Add)
+
 	// 项目日志
 	pLogs := &ProjectLog{}
 	logsRoute := auth.Group("/project-logs")

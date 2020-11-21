@@ -17,6 +17,11 @@ type UserModel struct {
 
 var _ ModelType = &UserModel{}
 
+// TableName 表名
+func (u *UserModel) TableName() string {
+	return "user_models"
+}
+
 // VerifyRepeatNickName 验证重复昵称
 func (u *UserModel) VerifyRepeatNickName() error {
 	user := &UserModel{Nick: u.Nick}
