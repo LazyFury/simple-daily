@@ -5,3 +5,4 @@ go.sum
 *backup.sql
 static/upload/*
 config/config.json
+.idea

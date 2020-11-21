@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
 	"net/http"
 
+	"github.com/Treblex/simple-daily/config"
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/routes"
 	"github.com/Treblex/simple-daily/tools"
@@ -58,7 +60,7 @@ func main() {
 	// 注册路由
 	routes.Start(g.Group(""))
 
-	err := g.Run()
+	err := g.Run(fmt.Sprintf(":%d", config.Global.Port))
 	if err != nil {
 		panic(err)
 	}
