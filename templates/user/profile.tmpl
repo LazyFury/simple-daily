@@ -5,28 +5,34 @@
     <div>
         <h1 style="padding:10px">用户信息</h1>
         <hr />
-        <form action="" method="POST" enctype="multipart/form-data" class="layui-form" style="width: 360px">
+        <form action="" method="POST" enctype="multipart/form-data" class="layui-form" style="width: 480px">
             <div class="layui-form-item">
                 <label class="layui-form-label" for="file">用户头像：</label>
                 <div class="layui-input-block">
                     <img src="{{.user.HeadPic}}" width="80" height="80" style="object-fit: cover;margin-bottom: 6px;"
                         alt="">
+                    <br>
                     <input type='file' name="file" id="file" />
                 </div>
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="nick">用户昵称：</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline">
                     <input class="layui-input" value="{{.user.Nick}}" placeholder="请输入用户昵称" lay-verify="required"
                         name="nick" id="nick" />
                 </div>
+                {{if .user.Email}}
+                <div class="layui-form-mid layui-word-aux" style="margin-top:-10px;color:red!important">用于登录，请记住用户名
+                    <br>或者设置登录邮箱</div>
+                {{end}}
             </div>
 
             <div class="layui-form-item">
                 <label class="layui-form-label" for="email">用户邮箱：</label>
                 <div class="layui-input-block">
-                    <input class="layui-input" value="{{.user.Email}}" placeholder="请输入用户邮箱" name="email" id="email" />
+                    <input type="email" class="layui-input" value="{{.user.Email}}" placeholder="请输入用户邮箱" name="email"
+                        id="email" />
                 </div>
             </div>
 

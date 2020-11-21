@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,11 +9,12 @@ import (
 
 // GinRecover Recover
 func GinRecover(c *gin.Context) {
+
 	if r := recover(); r != nil {
 		result := JSON(http.StatusInternalServerError, "", nil)
-
 		//普通错误
 		if err, ok := r.(error); ok {
+			log.Fatal(err)
 			result.Message = err.Error()
 			result.Data = err
 		}
@@ -38,9 +40,15 @@ func GinRecover(c *gin.Context) {
 		//返回内容
 		if ReqFromHTML(c) {
 			c.HTML(code, "404.tmpl", result)
-			return
+		} else {
+			c.JSON(code, result)
 		}
-		c.JSON(code, result)
+
+		log.Printf("\n\n\x1b[31m[Custom Debug Result]: URL:%s ;\nErr: %v \x1b[0m\n\n", c.Request.URL.RequestURI(), result)
+
+		// panic("打断response继续写入内容")
+		c.AbortWithStatus(http.StatusInternalServerError)
+
 	}
 
 }

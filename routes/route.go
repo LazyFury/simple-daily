@@ -46,9 +46,18 @@ func Start(g *gin.RouterGroup) {
 	userRouter.GET("/", user.Index)
 	userRouter.GET("/profile", user.UpdateProfile)
 	userRouter.POST("/profile", user.Update)
+	// 重置密码
+	userRouter.GET("/reset-password", user.ResetPage)
+	userRouter.POST("/reset-password", user.Reset)
 
 	g.POST("/reg", user.Add)
+	// 登录
 	g.GET("/login", user.LoginPage)
 	g.POST("/login", user.Login)
+	// 登出
 	g.GET("/logout", user.LogOut)
+	// 忘记密码
+	g.GET("/forgot", user.ForgotPage)
+	g.POST("/forgot", user.Forgot)
+
 }

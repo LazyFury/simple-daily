@@ -8,12 +8,17 @@ import (
 	"github.com/Treblex/simple-daily/routes"
 	"github.com/Treblex/simple-daily/tools"
 	"github.com/Treblex/simple-daily/utils"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	g := gin.Default()
+	g := gin.New()
+
+	store := cookie.NewStore([]byte("scretsdd"))
+	g.Use(sessions.Sessions("daily", store))
 
 	g.HandleMethodNotAllowed = true
 
@@ -25,6 +30,11 @@ func main() {
 		panic(utils.JSON(http.StatusNotFound, "", nil))
 	})
 
+	g.Use(gin.Logger())
+
+	// recover panic
+	g.Use(gin.Recovery())
+
 	g.Use(func(c *gin.Context) {
 		defer utils.GinRecover(c)
 		c.Next()
@@ -32,9 +42,6 @@ func main() {
 
 	// 自定义验证器
 	utils.RegValidator()
-
-	// recover panic
-	//g.Use(gin.Recovery())
 
 	// 挂载静态文件
 	g.Use(static.Serve("/static", static.LocalFile("static", false)))

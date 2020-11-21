@@ -27,16 +27,13 @@ var Auth gin.HandlerFunc = func(c *gin.Context) {
 	log.Printf("auth middleware")
 	token, err := getToken(c)
 	if err != nil || token == "" {
-		handleErr(c)
-		return
+		panic(utils.JSON(utils.AuthedError, "", nil))
 	}
 	user, err := parseToken(token)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, utils.JSONError("解析token错误", err))
-		return
+		panic(utils.JSON(utils.AuthedError, "解析token错误", err))
 	}
 	c.Set("user", user)
-	c.Next()
 }
 
 const (
@@ -81,15 +78,20 @@ func getToken(c *gin.Context) (token string, err error) {
 }
 
 // CreateToken 创建token
-func CreateToken(u models.UserModel) (tokens string, err error) {
+func CreateToken(u models.UserModel) (token string, err error) {
+	return CreateTokenMaxAge(u, int64(60*60*24))
+}
+
+// CreateTokenMaxAge 创建token
+func CreateTokenMaxAge(u models.UserModel, maxAge int64) (tokens string, err error) {
 	//自定义claim
 	claim := jwt.MapClaims{
 		"id":      u.ID,
 		"nick":    u.Nick,
 		"headPic": u.HeadPic,
-		"nbf":     time.Now().Unix(),            //指定时间之前 token不可用
-		"iat":     time.Now().Unix(),            //签发时间
-		"exp":     time.Now().Unix() + 60*60*24, //过期时间 24小时
+		"nbf":     time.Now().Unix(),          //指定时间之前 token不可用
+		"iat":     time.Now().Unix(),          //签发时间
+		"exp":     time.Now().Unix() + maxAge, //过期时间 24小时
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	tokens, err = token.SignedString([]byte(SECRET))

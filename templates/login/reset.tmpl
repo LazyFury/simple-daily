@@ -1,0 +1,46 @@
+{{template "base_header"}}
+
+<main>
+    <div>
+        <div style="width:400px;margin: 200px auto;">
+
+            <form action="" method="POST" class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <h1>
+                            <div>重设密码</div>
+                        </h1>
+                    </div>
+                </div>
+                <hr>
+                <div class="layui-form-item">
+                    <label for="password" class="layui-form-label">设置密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" placeholder="最少六位字符串" name="password" id="password" lay-verify='required'
+                            class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label for="password_confirm" class="layui-form-label">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" placeholder="最少六位字符串" name="password_confirm" id="password_confirm"
+                            lay-verify='required' class="layui-input">
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="forgot">重设密码</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+</main>
+
+{{template "base_footer"}}

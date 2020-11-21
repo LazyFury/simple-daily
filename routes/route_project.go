@@ -18,7 +18,6 @@ type Project struct{}
 
 // Index 首页
 func (p *Project) Index(c *gin.Context) {
-	defer utils.GinRecover(c)
 	page, size := models.GetPagingParams(c)
 	user := c.MustGet("user").(*models.UserModel)
 	type proejctsType struct {
@@ -51,7 +50,6 @@ func (p *Project) Index(c *gin.Context) {
 
 // Detail 项目详情
 func (p *Project) Detail(c *gin.Context) {
-	defer utils.GinRecover(c)
 	user := c.MustGet("user").(*models.UserModel)
 
 	id, _ := c.Params.Get("id")
@@ -131,7 +129,6 @@ func (p *Project) AddPage(c *gin.Context) {
 
 // UpdatePage 更新
 func (p *Project) UpdatePage(c *gin.Context) {
-	defer utils.GinRecover(c)
 	id, _ := c.Params.Get("id")
 	if id == "" {
 		panic("请输入项目id")
@@ -154,7 +151,6 @@ func (p *Project) UpdatePage(c *gin.Context) {
 
 // Add 添加项目
 func (p *Project) Add(c *gin.Context) {
-	defer utils.GinRecover(c)
 	user := c.MustGet("user").(*models.UserModel)
 	project := &models.ProjectModel{UserID: user.ID}
 
@@ -218,7 +214,6 @@ func (p *Project) Update(c *gin.Context) {
 
 // Delete 删除
 func (p *Project) Delete(c *gin.Context) {
-	defer utils.GinRecover(c)
 	id, _ := c.Params.Get("id")
 	if id == "" {
 		panic("请传入项目id")

@@ -1,0 +1,40 @@
+{{$site := site "重设密码"}}
+{{template "base_header" $site}}
+
+<main>
+
+    <div style="width:400px;margin: 200px auto;">
+
+        <form action="" method="POST" class="layui-form">
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <h1>
+                        <div>忘记密码</div>
+                    </h1>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="layui-form-item">
+                <label for="email" class="layui-form-label">邮箱</label>
+                <div class="layui-input-block">
+                    <input class="layui-input" name="email" placeholder="请输入您的邮箱" id="email" lay-verify="required"
+                        type="email" />
+                </div>
+            </div>
+            <input type="text" name="csrf" hidden value="{{.csrf}}" />
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="forgot">发送重置链接到我的邮箱</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
+
+{{template "base_footer"}}

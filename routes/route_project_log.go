@@ -13,7 +13,6 @@ type ProjectLog struct{}
 
 // Detail 日志详情
 func (p *ProjectLog) Detail(c *gin.Context) {
-	defer utils.GinRecover(c)
 	id, ok := c.Params.Get("id")
 	if !ok {
 		panic("id不可为空")
@@ -40,7 +39,6 @@ func (p *ProjectLog) AddPage(c *gin.Context) {
 
 // UpdatePage 更新日志页面
 func (p *ProjectLog) UpdatePage(c *gin.Context) {
-	defer utils.GinRecover(c)
 	lid, _ := c.Params.Get("lid")
 
 	if lid == "" {
@@ -60,7 +58,6 @@ func (p *ProjectLog) UpdatePage(c *gin.Context) {
 
 //Add 添加项目日志
 func (p *ProjectLog) Add(c *gin.Context) {
-	defer utils.GinRecover(c)
 	log := &models.ProjectLogModel{}
 	if err := c.ShouldBindJSON(log); err != nil {
 		panic(utils.JSONError("绑定参数错误", err))
@@ -88,7 +85,6 @@ func (p *ProjectLog) Add(c *gin.Context) {
 
 // Update 更新
 func (p *ProjectLog) Update(c *gin.Context) {
-	defer utils.GinRecover(c)
 	lid, _ := c.Params.Get("lid")
 
 	if lid == "" {

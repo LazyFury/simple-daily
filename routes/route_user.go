@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
+	"github.com/Treblex/simple-daily/config"
 	"github.com/Treblex/simple-daily/middleware"
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/utils"
@@ -18,7 +20,6 @@ type User struct{}
 
 // Index 用户列表
 func (u *User) Index(c *gin.Context) {
-	defer utils.GinRecover(c)
 	page, size := models.GetPagingParams(c)
 	users := &[]models.UserModel{}
 	usersModel := models.GetObjectsOrEmpty(users, nil)
@@ -26,6 +27,102 @@ func (u *User) Index(c *gin.Context) {
 		panic(err)
 	}
 	c.JSON(http.StatusOK, utils.JSONSuccess("", usersModel.Result))
+}
+
+// ResetPage ResetPage
+func (u *User) ResetPage(c *gin.Context) {
+	csrf, _ := setCsrfKey(c)
+	c.HTML(http.StatusOK, "login/reset.tmpl", map[string]interface{}{
+		"csrf": csrf,
+	})
+}
+
+// Reset 重设密码
+func (u *User) Reset(c *gin.Context) {
+	form := struct {
+		Password        string `json:"password" form:"password" binding:"required"`
+		PasswordConfirm string `json:"password_confirm" form:"password_confirm" binding:"required"`
+	}{}
+	user := c.MustGet("user").(*models.UserModel)
+	if err := c.ShouldBind(&form); err != nil {
+		panic(err)
+	}
+
+	if strings.Trim(form.Password, " ") == "" {
+		panic("请输入密码")
+	}
+
+	if form.Password != form.PasswordConfirm {
+		panic("两次输入的密码不相同")
+	}
+
+	if err := models.DB.Where(user).First(user).Error; err != nil {
+		panic(err)
+	}
+
+	if user.Password == form.Password {
+		panic("不可修改为和之前相同的密码")
+	}
+	password := sha.EnCode(form.Password)
+	hex := md5.Sum([]byte(password))
+	user.Password = fmt.Sprintf("%x", hex)
+
+	if err := user.Validator(); err != nil {
+		panic(err)
+	}
+
+	if err := models.DB.Save(user).Error; err != nil {
+		panic(err)
+	}
+
+	u.LogOut(c)
+}
+
+// ForgotPage 忘记密码
+func (u *User) ForgotPage(c *gin.Context) {
+	csrf, _ := setCsrfKey(c)
+	c.HTML(http.StatusOK, "login/forgot.tmpl", map[string]interface{}{
+		"csrf": csrf,
+	})
+}
+
+// Forgot 忘记密码
+func (u *User) Forgot(c *gin.Context) {
+	form := struct {
+		Email string `form:"email" binding:"required"`
+		Csrf  string `form:"csrf" binding:"required"`
+	}{}
+
+	if err := c.ShouldBind(&form); err != nil {
+		panic(err)
+	}
+
+	csrf, ok := getCsrfKey(c)
+	if ok && csrf == form.Csrf {
+		if strings.Trim(form.Email, " ") == "" {
+			panic("请输入用户邮箱")
+		}
+		user := &models.UserModel{Email: form.Email}
+		if err := models.DB.Where(user).First(user).Error; err != nil {
+			panic("用户不存在")
+		}
+
+		token, err := middleware.CreateTokenMaxAge(*user, int64(60*5)) //临时token 5分钟 重置密码成功之后删除重新登录
+		if err != nil {
+			panic(err)
+		}
+
+		if err := config.Global.Mail.SendMail(
+			"重置密码", []string{form.Email},
+			fmt.Sprintf("重置密码链接: <a href='http://%s/users/reset-password?token=%s'>reset password</a>", c.Request.Host, token),
+		); err != nil {
+			panic(err)
+		}
+		c.JSON(http.StatusOK, utils.JSONSuccess("邮件发送成功！", nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, utils.JSONError("验证失败", nil))
 }
 
 // LogOut 用户登出
@@ -41,7 +138,6 @@ func (u *User) LoginPage(c *gin.Context) {
 
 // Login 登录
 func (u *User) Login(c *gin.Context) {
-	defer utils.GinRecover(c)
 	postUser := struct {
 		Nick     string `json:"nick"`
 		Password string `json:"password"`
@@ -81,7 +177,6 @@ func (u *User) Login(c *gin.Context) {
 
 // Add 注册用户
 func (u *User) Add(c *gin.Context) {
-	defer utils.GinRecover(c)
 
 	user := &models.UserModel{}
 	if err := c.ShouldBind(user); err != nil {
@@ -115,7 +210,6 @@ func (u *User) UpdateProfile(c *gin.Context) {
 
 // Update 更新
 func (u *User) Update(c *gin.Context) {
-	defer utils.GinRecover(c)
 	user := c.MustGet("user").(*models.UserModel)
 
 	if err := models.DB.First(user).Error; err != nil {

@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/Treblex/simple-daily/tools/mail"
 )
 
 // Global 全局配置
@@ -19,8 +21,9 @@ func initConfig() *configType {
 }
 
 type configType struct {
-	BaseURL string `json:"base_url"` // 网站根目录
-	Port    int    `json:"port"`     //端口
+	BaseURL string    `json:"base_url"` // 网站根目录
+	Port    int       `json:"port"`     //端口
+	Mail    mail.Mail `json:"mail"`
 	// AliOss  upload.AliOssConf `json:"ali_oss"`  //阿里云oss
 }
 
