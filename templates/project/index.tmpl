@@ -33,8 +33,14 @@
         <tr>
           <td>{{.ID}}</td>
           <td><b>{{strDefault .Name "-"}}</b></td>
-          <td>{{.FavoriteID}}
-            <a href="javascript:favorite({{.ID}})">收藏</a>
+          <td>
+            <a href="javascript:favorite({{.ID}})" style="color:orange">
+              {{if .Favorited}}
+              <i class="layui-icon layui-icon-rate-solid"></i>
+              {{else}}
+              <i class="layui-icon layui-icon-rate"></i>
+              {{end}}
+            </a>
           </td>
           <td>{{strDefault .Describe "~"}}</td>
           <td>
@@ -83,7 +89,11 @@
       }
 
       function favorite(pid) {
-        fetch("/projects/favorite/" + pid, { method: "POST" })
+        request("/projects/favorite/" + pid, { method: "POST" }).then(() => {
+          setTimeout(() => {
+            location.reload()
+          }, 1000)
+        })
       }
 
       function open(url) {

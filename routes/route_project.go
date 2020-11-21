@@ -23,7 +23,7 @@ func (p *Project) Index(c *gin.Context) {
 	user := c.MustGet("user").(*models.UserModel)
 	type proejctsType struct {
 		*models.ProjectModel
-		FavoriteID uint
+		Favorited bool
 	}
 	projects := &[]proejctsType{}
 
@@ -32,8 +32,8 @@ func (p *Project) Index(c *gin.Context) {
 	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
 		return db.Table(project.TableName()).Select([]string{"id"}).Where(map[string]interface{}{
 			"user_id": user.ID,
-		}).Order("updated_at desc,id desc").Joins(fmt.Sprintf(
-			"left join (select id favorite_id,project_id,user_id f_user_id from `%s` where `deleted_at` IS NULL) f on f.`project_id`=`%s`.`id` and f.`f_user_id`=`%s`.`user_id`",
+		}).Order("favorited desc,updated_at desc,id desc").Joins(fmt.Sprintf(
+			"left join (select true favorited,project_id,user_id f_user_id from `%s` where `deleted_at` IS NULL) f on f.`project_id`=`%s`.`id` and f.`f_user_id`=`%s`.`user_id`",
 			favoriet.TableName(),
 			project.TableName(), project.TableName(),
 		))
