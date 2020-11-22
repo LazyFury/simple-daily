@@ -42,12 +42,12 @@ func csrf(c *gin.Context) {
 		if c.ContentType() == binding.MIMEJSON {
 			log.Print("csrf binding")
 			if err := utils.ShouldBindBodyWith(c, &form, binding.JSON); err != nil {
-				panic(utils.JSONError("验证失败", err))
+				panic(utils.JSONError("验证失败 请刷新页面重试", err))
 			}
 		} else {
 			b := binding.Default(c.Request.Method, c.ContentType())
 			if err := c.ShouldBindWith(&form, b); err != nil {
-				panic(utils.JSONError("验证失败", err))
+				panic(utils.JSONError("验证失败 请刷新页面重试", err))
 			}
 		}
 

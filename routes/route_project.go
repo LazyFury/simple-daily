@@ -128,7 +128,9 @@ func (p *Project) Detail(c *gin.Context) {
 
 // AddPage 添加
 func (p *Project) AddPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "project/add.tmpl", nil)
+	c.HTML(http.StatusOK, "project/add.tmpl", map[string]interface{}{
+		"csrf": c.MustGet("csrf").(string),
+	})
 }
 
 // UpdatePage 更新
@@ -172,7 +174,7 @@ func (p *Project) Add(c *gin.Context) {
 		panic(utils.JSONError("保存失败", err))
 	}
 
-	c.JSON(http.StatusOK, project)
+	c.JSON(http.StatusOK, utils.JSONSuccess("", project))
 }
 
 // Update 更新项目

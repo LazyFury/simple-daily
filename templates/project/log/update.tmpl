@@ -13,6 +13,8 @@
                 </div>
             </div>
 
+            <input type="text" hidden name="csrf" value="{{.csrf}}" id="">
+
 
             <div class="layui-form-item">
                 <label class="layui-form-label">项目介绍</label>
@@ -71,14 +73,12 @@
                         console.log(field)
                         field.project_id = field.project_id * 1
                         field.plus_progress = field.plus_progress * 1
-                        fetch("", {
-                            method: "put", body: JSON.stringify(field), headers: {
-                                "content-type": "application/json"
-                            }
-                        }).then(res => {
-                            // window.parent.location.reload()
-                            console.log(parent.location.reload())
-                            return res.json()
+                        reloadIframe(function () {
+                            return request("", {
+                                method: "put", body: JSON.stringify(field), headers: {
+                                    "content-type": "application/json"
+                                }
+                            })
                         })
                         return false
                     })

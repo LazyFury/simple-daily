@@ -35,3 +35,13 @@ function parentReload() {
     window.parent.location.reload();
   }, 1000);
 }
+
+function reloadIframe(api) {
+  return api()
+    .then(() => {
+      parentReload();
+    })
+    .catch(() => {
+      reload();
+    });
+}

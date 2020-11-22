@@ -63,13 +63,14 @@ func (u *User) Reset(c *gin.Context) {
 	if user.Password == form.Password {
 		panic("不可修改为和之前相同的密码")
 	}
-	password := sha.EnCode(form.Password)
-	hex := md5.Sum([]byte(password))
-	user.Password = fmt.Sprintf("%x", hex)
-
+	user.Password = form.Password
 	if err := user.Validator(); err != nil {
 		panic(err)
 	}
+
+	password := sha.EnCode(form.Password)
+	hex := md5.Sum([]byte(password))
+	user.Password = fmt.Sprintf("%x", hex)
 
 	if err := models.DB.Save(user).Error; err != nil {
 		panic(err)
@@ -129,7 +130,9 @@ func (u *User) LogOut(c *gin.Context) {
 
 // LoginPage 登录页面
 func (u *User) LoginPage(c *gin.Context) {
-	c.HTML(http.StatusOK, "login/login.tmpl", nil)
+	c.HTML(http.StatusOK, "login/login.tmpl", map[string]interface{}{
+		"csrf": c.MustGet("csrf").(string),
+	})
 }
 
 // Login 登录
@@ -168,7 +171,7 @@ func (u *User) Login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusForbidden, utils.JSONError("密码错误", nil))
+	c.JSON(http.StatusOK, utils.JSONError("密码错误", nil))
 }
 
 // Add 注册用户
@@ -201,6 +204,7 @@ func (u *User) UpdateProfile(c *gin.Context) {
 	}
 	c.HTML(http.StatusOK, "user/profile.tmpl", map[string]interface{}{
 		"user": user,
+		"csrf": c.MustGet("csrf").(string),
 	})
 }
 

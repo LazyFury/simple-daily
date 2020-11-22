@@ -12,7 +12,7 @@
                         autocomplete="off" class="layui-input" value='{{time now "2006-01-02T15:04"}}'>
                 </div>
             </div>
-
+            <input type="text" name="csrf" hidden value="{{.csrf}}" id="">
             <input type="text" name="project_id" hidden value="{{.projectID}}" id="">
 
             <div class="layui-form-item">
@@ -72,14 +72,12 @@
                         console.log(field)
                         field.project_id = field.project_id * 1
                         field.plus_progress = field.plus_progress * 1
-                        fetch("", {
-                            method: "post", body: JSON.stringify(field), headers: {
-                                "content-type": "application/json"
-                            }
-                        }).then(res => {
-                            // window.parent.location.reload()
-                            console.log(parent.location.reload())
-                            return res.json()
+                        reloadIframe(function () {
+                            return request("", {
+                                method: "post", body: JSON.stringify(field), headers: {
+                                    "content-type": "application/json"
+                                }
+                            })
                         })
                         return false
                     })

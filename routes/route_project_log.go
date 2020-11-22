@@ -35,6 +35,7 @@ func (p *ProjectLog) AddPage(c *gin.Context) {
 	projectID, _ := c.Params.Get("id")
 	c.HTML(http.StatusOK, "project/log/add.tmpl", map[string]interface{}{
 		"projectID": projectID,
+		"csrf":      c.MustGet("csrf").(string),
 	})
 }
 
@@ -53,7 +54,8 @@ func (p *ProjectLog) UpdatePage(c *gin.Context) {
 		panic(err)
 	}
 	c.HTML(http.StatusOK, "project/log/update.tmpl", map[string]interface{}{
-		"log": log,
+		"log":  log,
+		"csrf": c.MustGet("csrf").(string),
 	})
 }
 
