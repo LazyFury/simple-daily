@@ -34,7 +34,7 @@ func csrf(c *gin.Context) {
 		}
 		c.Set("csrf", _csrf)
 	}
-	if c.Request.Method == http.MethodPost || c.Request.Method == http.MethodPut {
+	if c.Request.Method == http.MethodPost || c.Request.Method == http.MethodPut || c.Request.Method == http.MethodDelete {
 		form := struct {
 			Csrf string `form:"csrf" binding:"required"`
 		}{}

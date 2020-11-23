@@ -45,7 +45,9 @@
                                 'content-type': 'application/json'
                             }, method: "POST",
                         }).then(res => {
-                            location.href = "/"
+                            setTimeout(() => {
+                                location.href = "/"
+                            }, 300)
                         })
                         return false
                     })

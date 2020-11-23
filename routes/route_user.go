@@ -125,7 +125,7 @@ func (u *User) Forgot(c *gin.Context) {
 // LogOut 用户登出
 func (u *User) LogOut(c *gin.Context) {
 	c.SetCookie("token", "", -1, "/", "", false, true)
-	c.Redirect(http.StatusMovedPermanently, "/login")
+	c.Redirect(http.StatusFound, "/login")
 }
 
 // LoginPage 登录页面

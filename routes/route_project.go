@@ -49,6 +49,7 @@ func (p *Project) Index(c *gin.Context) {
 		"projects":   projects,
 		"pagination": projectModel.Pagination,
 		"user":       c.MustGet("user").(*models.UserModel),
+		"csrf":       c.MustGet("csrf").(string),
 	})
 }
 
@@ -174,7 +175,7 @@ func (p *Project) Add(c *gin.Context) {
 		panic(utils.JSONError("保存失败", err))
 	}
 
-	c.JSON(http.StatusOK, utils.JSONSuccess("", project))
+	c.JSON(http.StatusOK, utils.JSONSuccess("添加成功", project))
 }
 
 // Update 更新项目

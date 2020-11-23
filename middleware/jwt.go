@@ -15,7 +15,7 @@ import (
 
 func handleErr(c *gin.Context, err string) {
 	if utils.ReqFromHTML(c) {
-		c.Redirect(http.StatusMovedPermanently, "/login")
+		c.Redirect(http.StatusFound, "/login")
 		return
 	}
 	c.AbortWithStatusJSON(http.StatusForbidden, utils.JSON(utils.AuthedError, err, nil))
