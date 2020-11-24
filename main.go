@@ -49,7 +49,7 @@ func main() {
 	g.Use(static.Serve("/static", static.LocalFile("static", false)))
 
 	// 链接数据库
-	if err := models.Connect(`root:sukeaiya@tcp(localhost:1232)/daily?charset=utf8mb4&parseTime=True&loc=Asia%2FShanghai`); err != nil {
+	if err := models.Connect(config.Global.Mysql.ToString()); err != nil {
 		panic(err)
 	}
 

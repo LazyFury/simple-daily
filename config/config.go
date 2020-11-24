@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/Treblex/simple-daily/tools/mail"
+	"github.com/Treblex/simple-daily/tools/mysql"
 )
 
 // Global 全局配置
@@ -21,9 +22,10 @@ func initConfig() *configType {
 }
 
 type configType struct {
-	BaseURL string    `json:"base_url"` // 网站根目录
-	Port    int       `json:"port"`     //端口
-	Mail    mail.Mail `json:"mail"`
+	BaseURL string      `json:"base_url"` // 网站根目录
+	Port    int         `json:"port"`     //端口
+	Mail    mail.Mail   `json:"mail"`
+	Mysql   mysql.Mysql `json:"mysql"`
 	// AliOss  upload.AliOssConf `json:"ali_oss"`  //阿里云oss
 }
 
