@@ -20,7 +20,7 @@ func (p *ProjectLog) Detail(c *gin.Context) {
 	}
 
 	log := &models.ProjectLogModel{}
-	err := models.GetObjectOrNotFound(log, map[string]interface{}{
+	err := models.DB.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": id,
 	})
 	if err != nil {
@@ -48,7 +48,7 @@ func (p *ProjectLog) UpdatePage(c *gin.Context) {
 	}
 
 	log := &models.ProjectLogModel{}
-	if err := models.GetObjectOrNotFound(log, map[string]interface{}{
+	if err := models.DB.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": lid,
 	}); err != nil {
 		panic(err)
@@ -107,7 +107,7 @@ func (p *ProjectLog) Update(c *gin.Context) {
 	log := &models.ProjectLogModel{}
 	project := &models.ProjectModel{}
 	// 查找日志
-	if err := models.GetObjectOrNotFound(log, map[string]interface{}{
+	if err := models.DB.GetObjectOrNotFound(log, map[string]interface{}{
 		"id": lid,
 	}); err != nil {
 		panic(err)

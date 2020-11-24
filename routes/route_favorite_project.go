@@ -28,7 +28,7 @@ func (f *FavoriteProject) Add(c *gin.Context) {
 		UserID:    user.ID,
 		ProjectID: uint(pid),
 	}
-	if err := models.GetObjectOrNotFound(favorite, favorite); err != nil {
+	if err := models.DB.GetObjectOrNotFound(favorite, favorite); err != nil {
 		if err := models.DB.Create(favorite).Error; err != nil {
 			panic(err)
 		}

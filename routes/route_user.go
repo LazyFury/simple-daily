@@ -22,7 +22,7 @@ type User struct{}
 func (u *User) Index(c *gin.Context) {
 	page, size := models.GetPagingParams(c)
 	users := &[]models.UserModel{}
-	usersModel := models.GetObjectsOrEmpty(users, nil)
+	usersModel := models.DB.GetObjectsOrEmpty(users, nil)
 	if err := usersModel.Paging(page, size); err != nil {
 		panic(err)
 	}
@@ -102,7 +102,7 @@ func (u *User) Forgot(c *gin.Context) {
 	}
 	// 查找用户
 	user := &models.UserModel{Email: form.Email}
-	if err := models.GetObjectOrNotFound(user, user); err != nil {
+	if err := models.DB.GetObjectOrNotFound(user, user); err != nil {
 		panic("用户不存在")
 	}
 

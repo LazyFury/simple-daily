@@ -30,7 +30,7 @@ func (p *Project) Index(c *gin.Context) {
 
 	favorite := &models.FavoriteProjectModel{} //收藏的项目
 	project := &models.ProjectModel{}          //项目
-	projectModel := models.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
+	projectModel := models.DB.GetObjectsOrEmpty(projects, nil, func(db *gorm.DB) *gorm.DB {
 		return db.Table(project.TableName()).Where(map[string]interface{}{
 			"user_id": user.ID,
 		}).Order("favorited desc,updated_at desc,id desc").Joins(fmt.Sprintf(
@@ -45,6 +45,7 @@ func (p *Project) Index(c *gin.Context) {
 	}); err != nil {
 		panic(err)
 	}
+	// c.JSON(http.StatusOK, utils.JSONSuccess("", projectModel.Result))
 	c.HTML(http.StatusOK, "project/index.tmpl", map[string]interface{}{
 		"projects":   projects,
 		"pagination": projectModel.Pagination,
@@ -67,7 +68,7 @@ func (p *Project) Detail(c *gin.Context) {
 	// 初始化模型
 	project := &models.ProjectModel{}
 	// 查询详情
-	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
+	if err := models.DB.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
 	}); err != nil {
@@ -77,7 +78,7 @@ func (p *Project) Detail(c *gin.Context) {
 	// 查询日志
 	logs := &[]models.ProjectLogModel{}
 
-	logsModel := models.GetObjectsOrEmpty(logs, nil, func(db *gorm.DB) *gorm.DB {
+	logsModel := models.DB.GetObjectsOrEmpty(logs, nil, func(db *gorm.DB) *gorm.DB {
 		return db.Where(map[string]interface{}{
 			"project_id": project.ID,
 		}).Order("created_at desc,id desc")
@@ -144,7 +145,7 @@ func (p *Project) UpdatePage(c *gin.Context) {
 	user := c.MustGet("user").(*models.UserModel)
 
 	project := &models.ProjectModel{}
-	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
+	if err := models.DB.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
 	}); err != nil {
@@ -189,7 +190,7 @@ func (p *Project) Update(c *gin.Context) {
 
 	project := &models.ProjectModel{}
 
-	if err := models.GetObjectOrNotFound(project, map[string]interface{}{
+	if err := models.DB.GetObjectOrNotFound(project, map[string]interface{}{
 		"id":      id,
 		"user_id": user.ID,
 	}); err != nil {

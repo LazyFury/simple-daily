@@ -8,7 +8,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type (
@@ -32,8 +34,8 @@ type (
 	}
 	// Result Result
 	Result struct {
-		List       interface{} `json:"list"`
-		Pagination Pagination  `json:"paging"`
+		List interface{} `json:"list"`
+		*Pagination
 	}
 	// Pagination 分页数据
 	Pagination struct {
@@ -47,7 +49,22 @@ type (
 		Page int
 		URL  string
 	}
+
+	// GormDB 自定义方法
+	GormDB struct {
+		*gorm.DB
+	}
 )
+
+// ConnectMysql 链接mysql
+func (g *GormDB) ConnectMysql(dsn string) (err error) {
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+		Logger:                 logger.Default.LogMode(logger.Info),
+		SkipDefaultTransaction: true,
+	})
+	g.DB = db
+	return
+}
 
 // SetURLFormat 设置url
 func (p *Pagination) SetURLFormat(url string) string {
@@ -104,14 +121,14 @@ func (o *Objects) Paging(page int, size int, args ...Middleware) (err error) {
 	}
 	o.Result = &Result{
 		List:       o.Obj,
-		Pagination: *o.Pagination,
+		Pagination: o.Pagination,
 	}
 	return
 }
 
 //GetObjectOrNotFound 获取某一条数据
 //gorm  first查询接收空条件，在某些情况下会操作到错误到数据
-func GetObjectOrNotFound(obj interface{}, query interface{}, midd ...Middleware) (err error) {
+func (g *GormDB) GetObjectOrNotFound(obj interface{}, query interface{}, midd ...Middleware) (err error) {
 	row := DB.Model(obj)
 	if query != nil {
 		row = row.Where(query)
@@ -127,7 +144,7 @@ func GetObjectOrNotFound(obj interface{}, query interface{}, midd ...Middleware)
 
 // GetObjectsOrEmpty 获取列表 \n
 // 可选参数 middleware models.middleware 接收一个 *gorm.DB 返回 *gorm.DB
-func GetObjectsOrEmpty(obj interface{}, query interface{}, args ...Middleware) *Objects {
+func (g *GormDB) GetObjectsOrEmpty(obj interface{}, query interface{}, args ...Middleware) *Objects {
 	row := DB.Model(obj)
 	if query != nil {
 		row = row.Where(query)
