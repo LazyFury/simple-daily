@@ -36,16 +36,16 @@ func (p *ProjectLogModel) Validator() (err error) {
 	if p.Content == "" {
 		return errors.New("请输入工作内容")
 	}
-	if p.PlusProgress < 0 || p.PlusProgress > 100 {
-		return errors.New("进度应该在0-100之间")
-	}
+	// if p.PlusProgress < 0 || p.PlusProgress > 100 {
+	// 	return errors.New("进度应该在0-100之间")
+	// }
 	project := &ProjectModel{Model: Model{ID: p.ProjectID}}
 	if DB.First(project).RowsAffected == 0 {
 		return errors.New("项目不存在")
 	}
-
-	if p.PlusProgress+project.Progress > 100 {
-		return errors.New("项目进度不可超过100")
+	var progress = p.PlusProgress + project.Progress
+	if progress > 100 || progress < 0 {
+		return errors.New("项目进度应该在0-100之间")
 	}
 
 	return

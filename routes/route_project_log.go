@@ -119,23 +119,28 @@ func (p *ProjectLog) Update(c *gin.Context) {
 	}).First(project).Error; err != nil {
 		panic(err)
 	}
-	// 减去旧的进度
-	project.Progress -= log.PlusProgress
+	oldProgress := log.PlusProgress
 
 	// 绑定更新
 	if err := c.ShouldBind(log); err != nil {
 		panic(err)
 	}
+	// 改变的进度,防止验证失败
+	log.PlusProgress -= oldProgress
+	// 更新进度
+	project.Progress += log.PlusProgress
 	// 验证更新
 	if err := log.Validator(); err != nil {
 		panic(err)
 	}
+
+	// 计算正确的进度
+	log.PlusProgress += oldProgress
 	// 更新日志
 	if err := models.DB.Save(log).Error; err != nil {
 		panic(err)
 	}
-	// 增加进度 更新项目
-	project.Progress += log.PlusProgress
+	// 更新项目
 	if err := models.DB.Save(project).Error; err != nil {
 		panic(err)
 	}
