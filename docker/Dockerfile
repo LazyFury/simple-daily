@@ -4,7 +4,7 @@ FROM 'golang'
 ENV GOPROXY http://goproxy.cn/
 ENV GO111MODULE on
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo 'Asia/Shanghai' >/etc/timezone
+RUN echo 'Asia/Shanghai' > /etc/timezone
 
 RUN go get -u github.com/cosmtrek/air
 RUN go get -u github.com/gin-gonic/gin

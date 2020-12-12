@@ -6,3 +6,4 @@ go.sum
 static/upload/*
 config/config.json
 .idea
+*/mysql/data

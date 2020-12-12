@@ -56,6 +56,7 @@ type (
 	}
 )
 
+
 // ConnectMysql 链接mysql
 func (g *GormDB) ConnectMysql(dsn string) (err error) {
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{

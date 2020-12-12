@@ -24,7 +24,7 @@ services:
       - seccomp:unconfined
     restart: always
     volumes:
-      - ./docker:/root/mysql
+      - ./docker/mysql/data:/var/lib/mysql
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=false
       - MYSQL_ROOT_PASSWORD=sukeaiya
