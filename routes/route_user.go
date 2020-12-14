@@ -174,6 +174,13 @@ func (u *User) Login(c *gin.Context) {
 	c.JSON(http.StatusOK, utils.JSONError("密码错误", nil))
 }
 
+// RegPage RegPage
+func (u *User) RegPage(c *gin.Context) {
+	c.HTML(http.StatusOK, "login/reg.tmpl", map[string]interface{}{
+		"csrf": c.MustGet("csrf").(string),
+	})
+}
+
 // Add 注册用户
 func (u *User) Add(c *gin.Context) {
 

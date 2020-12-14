@@ -51,6 +51,7 @@ func Start(r *gin.RouterGroup) {
 	userRouter.GET("/reset-password", user.ResetPage)
 	userRouter.POST("/reset-password", user.Reset)
 
+	g.GET("/reg", user.RegPage)
 	g.POST("/reg", user.Add)
 	// 登录
 	g.GET("/login", user.LoginPage)
@@ -60,5 +61,4 @@ func Start(r *gin.RouterGroup) {
 	// 忘记密码
 	g.GET("/forgot", user.ForgotPage)
 	g.POST("/forgot", user.Forgot)
-
 }
