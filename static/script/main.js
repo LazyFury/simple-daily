@@ -19,6 +19,9 @@ function request(url, config) {
       throw res;
     })
     .catch((err) => {
+      if (err.message == "验证错误") {
+        location.reload();
+      }
       layui.layer.msg(err.message || "请求错误");
       throw err;
     });
