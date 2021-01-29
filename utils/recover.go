@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -44,6 +45,12 @@ func GinRecover(c *gin.Context) {
 		}
 
 		log.Printf("\n\n\x1b[31m[Custom Debug Result]: URL:%s ;\nErr: %v \x1b[0m\n\n", c.Request.URL.RequestURI(), result)
+
+		sentry.CaptureEvent(&sentry.Event{
+			Extra: map[string]interface{}{
+				"err": result,
+			},
+		})
 
 		// "打断response继续写入内容"
 		c.AbortWithStatus(http.StatusInternalServerError)

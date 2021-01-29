@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
+	"time"
 
 	"github.com/Treblex/simple-daily/config"
 	"github.com/Treblex/simple-daily/models"
 	"github.com/Treblex/simple-daily/routes"
 	"github.com/Treblex/simple-daily/tools"
 	"github.com/Treblex/simple-daily/utils"
+	"github.com/getsentry/sentry-go"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-contrib/static"
@@ -19,7 +22,15 @@ import (
 func main() {
 	g := gin.New()
 
-	store := cookie.NewStore([]byte("scretsdd"))
+	sentryIniterr := sentry.Init(sentry.ClientOptions{
+		Dsn: "https://af4ccc0783a64fbc8faa1d42b030a36d@o299150.ingest.sentry.io/5613819",
+	})
+	if sentryIniterr != nil {
+		log.Fatalf("sendtry init err %v\n", sentryIniterr)
+	}
+	defer sentry.Flush(2 * time.Second)
+
+	store := cookie.NewStore([]byte("secrets"))
 	g.Use(sessions.Sessions("daily", store))
 
 	g.HandleMethodNotAllowed = true
