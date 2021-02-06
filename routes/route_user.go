@@ -236,7 +236,7 @@ func (u *User) Update(c *gin.Context) {
 		panic(err)
 	}
 
-	log.Print(user.Password)
+	// log.Print(user.Password)
 
 	if err := user.Validator(); err != nil {
 		panic(err)
